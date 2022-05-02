@@ -1,9 +1,8 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.3
+// @version      0.4
 // @description  Remove scores and spoilers from espn.com
-// @downloadURL  https://github.com/jtshiv/Tampermonkey/raw/main/ESPN%20Score%20unSpoiler.js
 // @updateURL    https://github.com/jtshiv/Tampermonkey/raw/main/ESPN%20Score%20unSpoiler.js
 // @author       jtshiv
 // @match        https://www.espn.com/
@@ -15,7 +14,8 @@
 (function() {
     'use strict';
 
-    // Your code here...
+    // Dev brach:
+    // https://github.com/jtshiv/Tampermonkey/raw/espnDev/ESPN%20Score%20unSpoiler.js
 
     console.log('ESPN Score unSpoiler script started');
 	$(document).ready(function(){
@@ -23,12 +23,12 @@
 
 	});
 
-    //Function to insert node in after another
+    // Function to insert node in after another
     function insertAfter(newNode, referenceNode) {
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     };
 
-    //Function to clone based on received items
+    // Function to clone based on received items
     function cloneNodes(items){
         for (var i=0;i<items.length;i++){
             var clone = items[i].cloneNode(true);
@@ -39,7 +39,7 @@
         };
     };
 
-    //Function to unhide originals when clone clicked
+    // Function to unhide originals when clone clicked
     function clickUnhide(){
         var elems = $('.clone:not(".clicker")');
         elems.addClass('clicker');
@@ -54,16 +54,16 @@
         });
     };
 
-	var observer = new MutationObserver(function(mutations) {
-        
-        
+    // Scores Tab Updates
+    function scoresTab(){
         //This section is for the mobile scores overlay from the top right
         
         // items are all the non clone/clones since we only want to do this once and it refreshes
         // on dom changes
         var items=$('.cscore_details[data-mptype="scoreboard"]:not(.cloned):not(.clone)');
         cloneNodes(items,'cloned','clone');
-        // Now make edits to only the clones
+
+        // Now make format edits to only the clones
         var clones=$('.clone');
         try{
             $(clones).find('.cscore_name').css('color','black');
@@ -88,11 +88,23 @@
         
         // after formatting changes, add the click listener to unhide the originals
         clickUnhide();
+    };
 
-        
+    // Home Tab Articles w/Games
+    function homeTab(){
         //This will be for the main page articles that have a score (not scoreboards)
         
         //var items=$('article.hasGame > [class*="team-"][class*="-winner"]');
+    };
+
+    // This is what runs where there are changes
+	var observer = new MutationObserver(function(mutations) {
+        
+        scoresTab();
+        homeTab();
+
+        
+        
 	});
 
 	/* Notify me of everything! */
