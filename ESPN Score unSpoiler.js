@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.8
+// @version      0.9
 // @description  Remove scores and spoilers from espn.com
 // @updateURL    https://github.com/jtshiv/Tampermonkey/raw/main/ESPN%20Score%20unSpoiler.js
 // @author       jtshiv
@@ -69,6 +69,12 @@
                 display: none !important;
             }
             .lScoresTab .ScoreCell__WinnerIcon{
+                display: none !important;
+            }
+            .lScoresTab .ScoreboardScoreCell__WinnerIcon{
+                display: none !important;
+            }
+            .lScoresTab .ScoreboardScoreCell_Linescores{
                 display: none !important;
             }
             `;
