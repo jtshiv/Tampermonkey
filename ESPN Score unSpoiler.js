@@ -21,6 +21,25 @@
 	$(document).ready(function(){
 		console.log('Document ready');
 
+        // Add CSS to do the edits to the classes
+        if ($('#unspoilerStyle').length){
+            $('#unspoilerStyle').remove();
+        };
+        var style = document.createElement('style');
+        style.id = "unspoilerStyle";
+        style.innerHTML = 
+            `
+            .scoresTab .cscore_name {
+                color: black !important;
+            }
+            .scoresTab .cscore_score {
+                display: none !important;
+            }
+            .scoresTab .cscore_team:after{
+                border-color: transparent !important;
+            }
+            `;
+        document.head.appendChild(style);
 	});
 
     // Function to insert node in after another
@@ -40,17 +59,17 @@
     };
 
     // Function to unhide originals when clone clicked
-    function clickUnhide(){
-        var elems = $('.clone:not(".clicker")');
-        elems.addClass('clicker');
+    function clickUnhide(elems,className){
         elems.on("click.clickUnhide", function(e){
             e.stopImmediatePropagation();
             e.preventDefault();
-            this.classList.add('clicked');
+            this.classList.remove(className);
+            $(this).off("click.clickUnhide");
+            /* this.classList.add('clicked');
             console.log(this);
             $('.cscore_link').has('.clicked').find('.cloned').show();
             $('.cscore_link').has('.clicked').find('.clone').hide();
-            this.classList.remove('clicked');
+            this.classList.remove('clicked'); */
         });
     };
 
@@ -60,34 +79,11 @@
         
         // items are all the non clone/clones since we only want to do this once and it refreshes
         // on dom changes
-        var items=$('.cscore_details[data-mptype="scoreboard"]:not(.cloned):not(.clone)');
-        cloneNodes(items);
-
-        // Now make format edits to only the clones
-        var clones=$('.clone');
-        try{
-            $(clones).find('.cscore_name').css('color','black');
-        } catch(e){
-            console.log(e);
-        }
-        try{
-            $('.cscore--home-winner').removeClass('cscore--home-winner');
-        } catch(e){
-            console.log(e);
-        }
-        try{
-            $('.cscore--away-winner').removeClass('cscore--away-winner');
-        } catch(e){
-            console.log(e);
-        }
-        try{
-            $(clones).find('.cscore_score').hide();
-        } catch(e){
-            console.log(e);
-        }
+        var items=$('.cscore--final:not(.scoresTab)').has('[data-mptype="scoreboard"]');
+        items.addClass('scoresTab');
         
         // after formatting changes, add the click listener to unhide the originals
-        clickUnhide();
+        clickUnhide(items,'scoresTab');
     };
 
     // Home Tab Articles w/Games
