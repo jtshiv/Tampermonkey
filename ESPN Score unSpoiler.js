@@ -3,6 +3,8 @@
 // @namespace    https://github.com/jtshiv/Tampermonkey
 // @version      0.3
 // @description  Remove scores and spoilers from espn.com
+// @downloadURL  https://github.com/jtshiv/Tampermonkey/raw/main/ESPN%20Score%20unSpoiler.js
+// @updateURL    https://github.com/jtshiv/Tampermonkey/raw/main/ESPN%20Score%20unSpoiler.js
 // @author       jtshiv
 // @match        https://www.espn.com/
 // @include      https://www.espn.com/*
@@ -54,41 +56,42 @@
 
 	var observer = new MutationObserver(function(mutations) {
         
-        /* 
-        This section is for the mobile scores overlay from the top right
-        */
+        
+        //This section is for the mobile scores overlay from the top right
+        
+        // items are all the non clone/clones since we only want to do this once and it refreshes
+        // on dom changes
         var items=$('.cscore_details[data-mptype="scoreboard"]:not(.cloned):not(.clone)');
         cloneNodes(items,'cloned','clone');
+        // Now make edits to only the clones
         var clones=$('.clone');
         try{
             $(clones).find('.cscore_name').css('color','black');
         } catch(e){
             console.log(e);
         }
-
         try{
             $('.cscore--home-winner').removeClass('cscore--home-winner');
         } catch(e){
             console.log(e);
         }
-
         try{
             $('.cscore--away-winner').removeClass('cscore--away-winner');
         } catch(e){
             console.log(e);
         }
-
         try{
             $(clones).find('.cscore_score').hide();
         } catch(e){
             console.log(e);
         }
-
+        
+        // after formatting changes, add the click listener to unhide the originals
         clickUnhide();
 
-        /* 
-        This will be for the main page articles that have a score (not scoreboards)
-        */
+        
+        //This will be for the main page articles that have a score (not scoreboards)
+        
         //var items=$('article.hasGame > [class*="team-"][class*="-winner"]');
 	});
 
