@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.6
+// @version      0.7
 // @description  Remove scores and spoilers from espn.com
 // @updateURL    https://github.com/jtshiv/Tampermonkey/raw/main/ESPN%20Score%20unSpoiler.js
 // @author       jtshiv
@@ -59,6 +59,16 @@
             .homeTab .contentItem__title{
                 display: none !important;
             }
+
+            .lScoresTab [class^="ScoreCell__"]{
+                color: black !important;
+            }
+            .lScoresTab .ScoreCell__Score{
+                display: none !important;
+            }
+            .lScoresTab .ScoreCell__WinnerIcon{
+                display: none !important;
+            }
             `;
         document.head.appendChild(style);
 	});
@@ -106,12 +116,24 @@
         
     };
 
+    // League Scores Tab
+    function lScoresTab(){
+        //Scores tab instead of a league
+        
+        var items=$('section.Scoreboard:not(.lScoresTab)');
+        items.addClass('lScoresTab'); // Does nothing yet
+
+        // Add the click listener to unhide the class
+        clickUnhide(items,'lScoresTab');
+        
+    };
+
     // This is what runs where there are changes
 	var observer = new MutationObserver(function(mutations) {
         
         scoresTab();
         homeTab();
-
+        lScoresTab();
         
         
 	});
