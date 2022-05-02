@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/jtshiv/Tampermonkey
 // @version      0.3
-// @description  try to take over the world!
-// @author       You
+// @description  Remove scores and spoilers from espn.com
+// @author       jtshiv
 // @match        https://www.espn.com/
 // @include      https://www.espn.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=espn.com
