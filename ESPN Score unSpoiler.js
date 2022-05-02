@@ -40,6 +40,25 @@
             .scoresTab .cscore_team:after{
                 border-color: transparent !important;
             }
+
+            .homeTab .game-details span{
+                display: none !important;
+            }
+            .homeTab .record{
+                display: none !important;
+            }
+            .homeTab .team-name > *{
+                color: black !important;
+            }
+            .homeTab .team-name{
+                color: black !important;
+            }
+            .homeTab .score-container{
+                display: none !important;
+            }
+            .homeTab .contentItem__title{
+                display: none !important;
+            }
             `;
         document.head.appendChild(style);
 	});
@@ -82,6 +101,8 @@
         var items=$('article.hasGame:not(.homeTab)').has('[class*="team-"][class*="-winner"]');
         items.addClass('homeTab'); // Does nothing yet
 
+        // Add the click listener to unhide the class
+        clickUnhide(items,'homeTab');
         
     };
 
@@ -89,7 +110,7 @@
 	var observer = new MutationObserver(function(mutations) {
         
         scoresTab();
-        //homeTab();
+        homeTab();
 
         
         
