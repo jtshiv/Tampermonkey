@@ -61,7 +61,7 @@
         // items are all the non clone/clones since we only want to do this once and it refreshes
         // on dom changes
         var items=$('.cscore_details[data-mptype="scoreboard"]:not(.cloned):not(.clone)');
-        cloneNodes(items,'cloned','clone');
+        cloneNodes(items);
 
         // Now make format edits to only the clones
         var clones=$('.clone');
@@ -94,14 +94,17 @@
     function homeTab(){
         //This will be for the main page articles that have a score (not scoreboards)
         
-        //var items=$('article.hasGame > [class*="team-"][class*="-winner"]');
+        var items=$('article.hasGame:not(.cloned):not(.clone)').has('[class*="team-"][class*="-winner"]');
+        cloneNodes(items);
+
+        
     };
 
     // This is what runs where there are changes
 	var observer = new MutationObserver(function(mutations) {
         
         scoresTab();
-        homeTab();
+        //homeTab();
 
         
         
