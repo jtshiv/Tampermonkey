@@ -7,6 +7,7 @@
 // @author       jtshiv
 // @match        https://www.espn.com/
 // @include      https://www.espn.com/*
+// @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=espn.com
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // @grant        none
