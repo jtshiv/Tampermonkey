@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler
-// @namespace    http://tampermonkey.net/
-// @version      0.2
-// @description  try to take over the world!
-// @author       You
+// @namespace    https://github.com/jtshiv/Tampermonkey
+// @version      0.3
+// @description  Remove scores and spoilers from espn.com
+// @author       jtshiv
 // @match        https://www.espn.com/
-// @include https://www.espn.com/*
+// @include      https://www.espn.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=espn.com
 // @grant        none
 // ==/UserScript==
@@ -15,61 +15,50 @@
 
     // Your code here...
 
-
-    console.log('Tampermonkey script started');
+    console.log('ESPN Score unSpoiler script started');
 	$(document).ready(function(){
 		console.log('Document ready');
 
 	});
 
-
+    //Function to insert node in after another
     function insertAfter(newNode, referenceNode) {
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     };
 
-	var observer = new MutationObserver(function(mutations) {
-        /*
-        //var test=document.createElement('div');
-        //test.innerText="Show Score";
-        //var referenceNode=$('.cscore_details[data-mptype="scoreboard"] > .cscore_competitors')[0];
-        //referenceNode.parentNode.insertBefore(test, referenceNode.nextSibling);
-
-        try{
-            $('.cscore_name').css('color','black');
-        } catch(e){
-            console.log(e);
-        }
-
-        try{
-            $('.cscore--home-winner').removeClass('cscore--home-winner');
-        } catch(e){
-            console.log(e);
-        }
-
-        try{
-            $('.cscore--away-winner').removeClass('cscore--away-winner');
-        } catch(e){
-            console.log(e);
-        }
-
-        try{
-            $('.cscore_score').hide();
-        } catch(e){
-            console.log(e);
-        }
-        */
-
-
-
-        var items=$('.cscore_details[data-mptype="scoreboard"]:not(.cloned):not(.clone)');
+    //Function to clone based on received items
+    function cloneNodes(items){
         for (var i=0;i<items.length;i++){
             var clone = items[i].cloneNode(true);
             items[i].classList.add('cloned');
-            //items[i].classList.add('hidden');
             $(items[i]).hide();
             clone.classList.add('clone');
             insertAfter(clone,items[i]);
         };
+    };
+
+    //Function to unhide originals when clone clicked
+    function clickUnhide(){
+        var elems = $('.clone:not(".clicker")');
+        elems.addClass('clicker');
+        elems.on("click.clickUnhide", function(e){
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            this.classList.add('clicked');
+            console.log(this);
+            $('.cscore_link').has('.clicked').find('.cloned').show();
+            $('.cscore_link').has('.clicked').find('.clone').hide();
+            this.classList.remove('clicked');
+        });
+    };
+
+	var observer = new MutationObserver(function(mutations) {
+        
+        /* 
+        This section is for the mobile scores overlay from the top right
+        */
+        var items=$('.cscore_details[data-mptype="scoreboard"]:not(.cloned):not(.clone)');
+        cloneNodes(items,'cloned','clone');
         var clones=$('.clone');
         try{
             $(clones).find('.cscore_name').css('color','black');
@@ -95,18 +84,12 @@
             console.log(e);
         }
 
-        //var elems = $('.cscore_time:contains(Final):not(".clicker")');
-        var elems = $('.clone:not(".clicker")');
-        elems.addClass('clicker');
-        elems.on( "click", function(e){
-            e.preventDefault();
-            this.classList.add('clicked');
-            console.log(this);
-            $('.cscore_link').has('.clicked').find('.cloned').show();
-            $('.cscore_link').has('.clicked').find('.clone').hide();
-            this.classList.remove('clicked');
-        });
+        clickUnhide();
 
+        /* 
+        This will be for the main page articles that have a score (not scoreboards)
+        */
+        //var items=$('article.hasGame > [class*="team-"][class*="-winner"]');
 	});
 
 	/* Notify me of everything! */
