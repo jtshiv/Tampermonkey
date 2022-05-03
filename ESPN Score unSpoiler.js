@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.9.1
+// @version      0.9.2
 // @description  Remove scores and spoilers from espn.com
 // @updateURL    https://github.com/jtshiv/Tampermonkey/raw/main/ESPN%20Score%20unSpoiler.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -32,6 +32,11 @@
         style.id = "unspoilerStyle";
         style.innerHTML = 
             `
+            .edited{
+                border-style:solid;
+                border-color:red;
+                border-width:thin;
+            }
             .scoresTab .cscore_name {
                 color: black !important;
             }
@@ -40,6 +45,9 @@
             }
             .scoresTab .cscore_team:after{
                 border-color: transparent !important;
+            }
+            .scoresTab .cscore_commentary{
+                display: none !important;
             }
 
             .homeTab .game-details span{
@@ -106,6 +114,8 @@
         // otherwise it'll keep adding event listeners to trigger multiple times
         var items=$('.cscore--final:not(.scoresTab)').has('[data-mptype="scoreboard"]');
         items.addClass('scoresTab');
+        // This allows for specific css only to this
+        items.addClass('edited');
         
         // Add the click listener to unhide the class
         clickUnhide(items,'scoresTab');
@@ -116,7 +126,9 @@
         //This will be for the main page articles that have a score (not scoreboards)
         
         var items=$('article.hasGame:not(.homeTab)').has('[class*="team-"][class*="-winner"]');
-        items.addClass('homeTab'); // Does nothing yet
+        items.addClass('homeTab');
+        // This allows for specific css only to this
+        items.addClass('edited');
 
         // Add the click listener to unhide the class
         clickUnhide(items,'homeTab');
@@ -128,7 +140,9 @@
         //Scores tab instead of a league
         
         var items=$('section.Scoreboard:not(.lScoresTab)');
-        items.addClass('lScoresTab'); // Does nothing yet
+        items.addClass('lScoresTab');
+        // This allows for specific css only to this
+        items.addClass('edited');
 
         // Add the click listener to unhide the class
         clickUnhide(items,'lScoresTab');
