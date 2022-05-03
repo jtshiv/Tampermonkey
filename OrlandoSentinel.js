@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Orlando Sentinel
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.4
+// @version      0.5
 // @description  Remove blocks that block you from reading
 // @author       jtshiv
 // @match        https://www.orlandosentinel.com
