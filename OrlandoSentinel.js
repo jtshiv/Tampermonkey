@@ -59,19 +59,21 @@
 		if ($('#regiwall-overlay').length){
 			$('#regiwall-overlay').remove();
 		};
-		for (img of $find('img')){
-			if (img.getAttribute('data-src')){
-				img.src = img.getAttribute('data-src');
-			};
-		};
-		unsafeWindow.addEventListener("scroll", function (event) {
+		try{
+            for (img of $find('img')){
+                if (img.getAttribute('data-src')){
+                    img.src = img.getAttribute('data-src');
+                };
+            }
+        }catch(e){
+            console.log(e);
+        };
+		unsafeWindow.document.addEventListener("scroll", function (event) {
 			event.stopPropagation();
 			event.stopImmediatePropagation();
+			event.preventDefault();
 		}, true);
-		$('html')[0].addEventListener("scroll", function (event) {
-			event.stopPropagation();
-			event.stopImmediatePropagation();
-		}, true);
+		console.log('window scroll event listener added');
 		$('html').css("overflow","auto");
 		
 
