@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Orlando Sentinel
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.5
+// @version      0.6
 // @description  Remove blocks that block you from reading
 // @author       jtshiv
 // @match        https://www.orlandosentinel.com
@@ -34,8 +34,18 @@
             .overflow_hidden{
 				overflow: auto !important;
 			}
+			html{
+				overflow: auto !important;
+			}
             `;
         document.head.appendChild(style);
+		unsafeWindow.document.addEventListener("scroll", function (event) {
+			event.stopPropagation();
+			event.stopImmediatePropagation();
+			event.preventDefault();
+		}, true);
+		console.log('window scroll event listener added');
+		$('html').css("overflow","auto");
 	});
 
 	var observer = new MutationObserver(function(mutations) {
@@ -69,13 +79,7 @@
         }catch(e){
             console.log(e);
         };
-		unsafeWindow.document.addEventListener("scroll", function (event) {
-			event.stopPropagation();
-			event.stopImmediatePropagation();
-			event.preventDefault();
-		}, true);
-		console.log('window scroll event listener added');
-		$('html').css("overflow","auto");
+		
 		
 
 	});
