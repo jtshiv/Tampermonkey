@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Orlando Sentinel
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.2
+// @version      0.3
 // @description  Remove blocks that block you from reading
 // @author       You
 // @match        https://www.orlandosentinel.com
@@ -22,7 +22,18 @@
 	console.log('Orlando Sentinel script started');
 	$(document).ready(function(){
 		console.log('Document ready');
-
+		if ($('#osStyle').length){
+            $('#osStyle').remove();
+        };
+        var style = document.createElement('style');
+        style.id = "osStyle";
+        style.innerHTML = 
+            `
+            .overflow_hidden{
+				overflow: auto !important;
+			}
+            `;
+        document.head.appendChild(style);
 	});
 
 	var observer = new MutationObserver(function(mutations) {
