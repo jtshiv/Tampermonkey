@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Orlando Sentinel
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.4
+// @version      0.5
 // @description  Remove blocks that block you from reading
 // @author       jtshiv
 // @match        https://www.orlandosentinel.com
@@ -17,7 +17,8 @@
 (function() {
     'use strict';
 
-    /* Your code here... */
+    // Dev Branch:
+	// https://raw.githubusercontent.com/jtshiv/Tampermonkey/osDev/OrlandoSentinel.js
 
 
 	console.log('Orlando Sentinel script started');
@@ -59,19 +60,21 @@
 		if ($('#regiwall-overlay').length){
 			$('#regiwall-overlay').remove();
 		};
-		for (img of $find('img')){
-			if (img.getAttribute('data-src')){
-				img.src = img.getAttribute('data-src');
-			};
-		};
-		unsafeWindow.addEventListener("scroll", function (event) {
+		try{
+            for (img of $find('img')){
+                if (img.getAttribute('data-src')){
+                    img.src = img.getAttribute('data-src');
+                };
+            }
+        }catch(e){
+            console.log(e);
+        };
+		unsafeWindow.document.addEventListener("scroll", function (event) {
 			event.stopPropagation();
 			event.stopImmediatePropagation();
+			event.preventDefault();
 		}, true);
-		$('html')[0].addEventListener("scroll", function (event) {
-			event.stopPropagation();
-			event.stopImmediatePropagation();
-		}, true);
+		console.log('window scroll event listener added');
 		$('html').css("overflow","auto");
 		
 
