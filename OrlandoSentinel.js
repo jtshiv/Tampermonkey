@@ -10,7 +10,7 @@
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // @run-at       document-idle
-// @grant        none
+// @grant        unsafeWindow
 // @noframes
 // ==/UserScript==
 
