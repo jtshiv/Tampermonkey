@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Orlando Sentinel
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.1
+// @version      0.2
 // @description  Remove blocks that block you from reading
 // @author       You
 // @match        https://www.orlandosentinel.com
 // @include      https://www.orlandosentinel.com*
+// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/OrlandoSentinel.js
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // @run-at       document-idle
 // @grant        none
@@ -25,7 +26,33 @@
 	});
 
 	var observer = new MutationObserver(function(mutations) {
-
+		try{
+			$('#right-rail').remove();
+			$('section#left')[0].style="width:100%";
+		} catch(e){
+			null
+		};
+		if ($('div[class*="onesignal-slidedown"]').length){
+			$('div[class*="onesignal-slidedown"]').remove();
+		};
+		if ($('div[class*="ads"]').length){
+			$('div[class*="ads"]').remove();
+		};
+		if ($("div.met-footer-toast").length){
+			$("div.met-footer-toast").remove();
+		};
+		if ($('#zephr-overlay').length){
+			$('#zephr-overlay').remove();
+			for (img of $find('img')){
+				if (img.getAttribute('data-src')){
+					img.src = img.getAttribute('data-src');
+				};
+			};
+			unsafeWindow.addEventListener("scroll", function (event) {
+				event.stopPropagation();
+			}, true);
+			$('html').css("overflow","auto");
+		};
 
 	});
 
