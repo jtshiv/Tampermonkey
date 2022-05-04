@@ -139,7 +139,18 @@
     function lScoresTab(){
         //Scores tab instead of a league
         
-        var items=$('section.Scoreboard:not(.lScoresTab)');
+        try{
+            var items=$('section.Scoreboard:not(.lScoresTab)');
+        }catch(e){
+            console.log(e);
+        };
+        if (!items.length){
+            try{
+                var items=$$('section.Scoreboard:not(.lScoresTab)');
+            }catch(e){
+                console.log(e);
+            };
+        }
         items.addClass('lScoresTab');
 
         // Add the click listener to unhide the class
