@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.9.3
+// @version      0.9.4
 // @description  Remove scores and spoilers from espn.com
-// @updateURL    https://github.com/jtshiv/Tampermonkey/raw/main/ESPN%20Score%20unSpoiler.js
+// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/ESPN%20Score%20unSpoiler.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
 // @match        https://www.espn.com/
@@ -16,7 +16,7 @@
     'use strict';
 
     // Dev brach:
-    // https://github.com/jtshiv/Tampermonkey/raw/espnDev/ESPN%20Score%20unSpoiler.js
+    // https://raw.githubusercontent.com/jtshiv/Tampermonkey/dev/ESPN%20Score%20unSpoiler.js
 
     console.log('ESPN Score unSpoiler script started');
 	$(document).ready(function(){
@@ -98,6 +98,9 @@
 
     // Function to unhide originals when clicked
     function clickUnhide(elems,className){
+        // This allows for specific css only to this
+        elems.addClass('edited');
+        // The actual listener
         elems.on("click.clickUnhide", function(e){
             e.stopImmediatePropagation();
             e.preventDefault();
@@ -115,8 +118,6 @@
         // otherwise it'll keep adding event listeners to trigger multiple times
         var items=$('.cscore--final:not(.scoresTab)').has('[data-mptype="scoreboard"]');
         items.addClass('scoresTab');
-        // This allows for specific css only to this
-        items.addClass('edited');
         
         // Add the click listener to unhide the class
         clickUnhide(items,'scoresTab');
@@ -128,8 +129,6 @@
         
         var items=$('article.hasGame:not(.homeTab)').has('[class*="team-"][class*="-winner"]');
         items.addClass('homeTab');
-        // This allows for specific css only to this
-        items.addClass('edited');
 
         // Add the click listener to unhide the class
         clickUnhide(items,'homeTab');
@@ -140,10 +139,21 @@
     function lScoresTab(){
         //Scores tab instead of a league
         
-        var items=$('section.Scoreboard:not(.lScoresTab)');
-        items.addClass('lScoresTab');
-        // This allows for specific css only to this
-        items.addClass('edited');
+        try{
+            var items=$('section.Scoreboard:not(.lScoresTab)');
+        }catch(e){
+            console.log(e);
+        };
+        if (!items.length){
+            try{
+                var items=$$('section.Scoreboard:not(.lScoresTab)');
+            }catch(e){
+                console.log(e);
+            };
+        }
+        items.forEach(function(elem){
+            elem.classList.add('lScoresTab');
+        });
 
         // Add the click listener to unhide the class
         clickUnhide(items,'lScoresTab');
