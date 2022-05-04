@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.9.3
+// @version      0.9.4
 // @description  Remove scores and spoilers from espn.com
-// @updateURL    https://github.com/jtshiv/Tampermonkey/raw/main/ESPN%20Score%20unSpoiler.js
+// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/ESPN%20Score%20unSpoiler.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
 // @match        https://www.espn.com/
@@ -16,7 +16,7 @@
     'use strict';
 
     // Dev brach:
-    // https://github.com/jtshiv/Tampermonkey/raw/espnDev/ESPN%20Score%20unSpoiler.js
+    // https://raw.githubusercontent.com/jtshiv/Tampermonkey/dev/ESPN%20Score%20unSpoiler.js
 
     console.log('ESPN Score unSpoiler script started');
 	$(document).ready(function(){
