@@ -98,6 +98,9 @@
 
     // Function to unhide originals when clicked
     function clickUnhide(elems,className){
+        // This allows for specific css only to this
+        items.addClass('edited');
+        // The actual listener
         elems.on("click.clickUnhide", function(e){
             e.stopImmediatePropagation();
             e.preventDefault();
@@ -115,8 +118,6 @@
         // otherwise it'll keep adding event listeners to trigger multiple times
         var items=$('.cscore--final:not(.scoresTab)').has('[data-mptype="scoreboard"]');
         items.addClass('scoresTab');
-        // This allows for specific css only to this
-        items.addClass('edited');
         
         // Add the click listener to unhide the class
         clickUnhide(items,'scoresTab');
@@ -128,8 +129,6 @@
         
         var items=$('article.hasGame:not(.homeTab)').has('[class*="team-"][class*="-winner"]');
         items.addClass('homeTab');
-        // This allows for specific css only to this
-        items.addClass('edited');
 
         // Add the click listener to unhide the class
         clickUnhide(items,'homeTab');
@@ -142,8 +141,6 @@
         
         var items=$('section.Scoreboard:not(.lScoresTab)');
         items.addClass('lScoresTab');
-        // This allows for specific css only to this
-        items.addClass('edited');
 
         // Add the click listener to unhide the class
         clickUnhide(items,'lScoresTab');
