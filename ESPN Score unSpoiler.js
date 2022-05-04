@@ -99,7 +99,7 @@
     // Function to unhide originals when clicked
     function clickUnhide(elems,className){
         // This allows for specific css only to this
-        items.addClass('edited');
+        elems.addClass('edited');
         // The actual listener
         elems.on("click.clickUnhide", function(e){
             e.stopImmediatePropagation();
@@ -151,7 +151,9 @@
                 console.log(e);
             };
         }
-        items.addClass('lScoresTab');
+        items.forEach(function(elem){
+            elem.classList.add('lScoresTab');
+        });
 
         // Add the click listener to unhide the class
         clickUnhide(items,'lScoresTab');
