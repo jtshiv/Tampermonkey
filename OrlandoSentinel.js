@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Orlando Sentinel
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.6
+// @version      0.7
 // @description  Remove blocks that block you from reading
 // @author       jtshiv
 // @match        https://www.orlandosentinel.com
@@ -58,15 +58,26 @@
 		if ($('div[class*="onesignal-slidedown"]').length){
 			$('div[class*="onesignal-slidedown"]').remove();
 		};
+		// Some ads
 		if ($('div[class*="ads"]').length){
 			$('div[class*="ads"]').remove();
+		};
+		// Floating video player
+		if ($('stn-player').length){
+			$('stn-player').remove();
+		};
+		// weather block
+		if ($('section').has('[data-pb-id="weather-sponsorship"]').length){
+			$('section').has('[data-pb-id="weather-sponsorship"]').remove();
 		};
 		if ($("div.met-footer-toast").length){
 			$("div.met-footer-toast").remove();
 		};
+		// One type of overlay
 		if ($('#zephr-overlay').length){
 			$('#zephr-overlay').remove();
 		};
+		// One type of overlay
 		if ($('#regiwall-overlay').length){
 			$('#regiwall-overlay').remove();
 		};
