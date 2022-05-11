@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bookmarklet Library
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  try to take over the world!
 // @author       jtshiv
 // @include      *
@@ -33,6 +33,7 @@
                         GM_addElement(document.body,'script',{
                             textContent: response.responseText
                         });
+						unsafeWindow.Bm_bLibraryLoadedComp = true;
                     }
                 })
 
@@ -62,6 +63,7 @@
                         GM_addElement(document.body,'script',{
                             textContent: response.responseText
                         });
+						unsafeWindow.Bm_bLibraryjQueryComp = true;
                     }
                 })
             }
