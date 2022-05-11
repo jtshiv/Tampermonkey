@@ -11,6 +11,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
 // @grant        GM_getResourceText
 // @grant        unsafeWindow
+// @grant        GM_addElement
 // ==/UserScript==
 
 (function() {
@@ -24,7 +25,10 @@
                 oScript.type = 'text/javascript';
                 oScript.text = sBMLibSource;
                 // document.getElementsByTagName ('head')[0].appendChild (oScript);
-                document.body.appendChild (oScript);
+                // document.body.appendChild (oScript);
+                GM_addElement(document.body,'script',{
+					textContent: sBMLibSource
+				});
             }
 
         } else {
@@ -39,5 +43,5 @@
 
 
     // EXAMPLE Bookmarklet shell/template:
-    // javascript:(function(){window.Bm_bLibraryRequest=true;setTimeout(function(){window['***FUNCTION-NAME***']();},200);})()
+    // javascript:(function(){window.Bm_bLibraryRequest=true;setTimeout(function(){window['addjQuery']();},200);})()
 })();
