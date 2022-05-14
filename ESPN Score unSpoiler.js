@@ -169,7 +169,7 @@
         
         scoresTab();
         homeTab();
-        lScoresTab();
+        // lScoresTab();
         
         
 	});
