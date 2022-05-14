@@ -140,29 +140,29 @@
     };
 
     // League Scores Tab
-    function lScoresTab(){
-        //Scores tab instead of a league
+    // function lScoresTab(){
+    //     //Scores tab instead of a league
         
-        try{
-            var items=$('section.Scoreboard:not(.lScoresTab)');
-        }catch(e){
-            console.log(e);
-        };
-        if (!items.length){
-            try{
-                var items=$$('section.Scoreboard:not(.lScoresTab)');
-            }catch(e){
-                console.log(e);
-            };
-        }
-        items.forEach(function(elem){
-            elem.classList.add('lScoresTab');
-        });
+    //     try{
+    //         var items=$('section.Scoreboard:not(.lScoresTab)');
+    //     }catch(e){
+    //         console.log(e);
+    //     };
+    //     if (!items.length){
+    //         try{
+    //             var items=$$('section.Scoreboard:not(.lScoresTab)');
+    //         }catch(e){
+    //             console.log(e);
+    //         };
+    //     }
+    //     items.forEach(function(elem){
+    //         elem.classList.add('lScoresTab');
+    //     });
 
-        // Add the click listener to unhide the class
-        clickUnhide(items,'lScoresTab');
+    //     // Add the click listener to unhide the class
+    //     clickUnhide(items,'lScoresTab');
         
-    };
+    // };
 
     // This is what runs where there are changes
 	var observer = new MutationObserver(function(mutations) {
