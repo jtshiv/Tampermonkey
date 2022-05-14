@@ -32,7 +32,7 @@
         style.id = "unspoilerStyle";
         style.innerHTML = 
             `
-            .edited{
+            .editedBorder{
                 border-style:solid;
                 border-color:red;
                 border-width:thin;
@@ -96,16 +96,20 @@
 
     
 
-    // Function to unhide originals when clicked
+    /**
+     * Function to unhide originals when clicked
+     * @param  {node} elems element to add class and listener to
+     * @param  {string} className class name to remove to unhide
+     */
     function clickUnhide(elems,className){
         // This allows for specific css only to this
-        elems.addClass('edited');
+        elems.addClass('edited editedBorder');
         // The actual listener
         elems.on("click.clickUnhide", function(e){
             e.stopImmediatePropagation();
             e.preventDefault();
             this.classList.remove(className);
-            this.classList.remove('edited');
+            this.classList.remove('editedBorder');
             $(this).off("click.clickUnhide");
         });
     };
@@ -116,7 +120,7 @@
         
         // Grabs the selector that doesn't already have scoresTab. Needed as
         // otherwise it'll keep adding event listeners to trigger multiple times
-        var items=$('.cscore--final:not(.scoresTab)').has('[data-mptype="scoreboard"]');
+        var items=$('.cscore--final:not(.scoresTab):not(.edited)').has('[data-mptype="scoreboard"]');
         items.addClass('scoresTab');
         
         // Add the click listener to unhide the class
@@ -127,7 +131,7 @@
     function homeTab(){
         //This will be for the main page articles that have a score (not scoreboards)
         
-        var items=$('article.hasGame:not(.homeTab)').has('[class*="team-"][class*="-winner"]');
+        var items=$('article.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"][class*="-winner"]');
         items.addClass('homeTab');
 
         // Add the click listener to unhide the class
