@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.9.4
+// @version      0.9.5
 // @description  Remove scores and spoilers from espn.com
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/ESPN%20Score%20unSpoiler.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -133,10 +133,13 @@
         
         var items=$('article.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"][class*="-winner"]');
         items.addClass('homeTab');
-
+        
         // Add the click listener to unhide the class
         clickUnhide(items,'homeTab');
         
+        items=$('section.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"]')
+        items.addClass('homeTab');
+        clickUnhide(items,'homeTab');
     };
 
     // League Scores Tab
