@@ -140,6 +140,10 @@
         items=$('section.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"]')
         items.addClass('homeTab');
         clickUnhide(items,'homeTab');
+
+        items=$('article.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"]')
+        items.addClass('homeTab');
+        clickUnhide(items,'homeTab');
     };
 
     // League Scores Tab
