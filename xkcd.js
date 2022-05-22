@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         xkcd
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  try to take over the world!
 // @author       jtshiv
 // @updateURL	 https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/xkcd.js
@@ -34,6 +34,10 @@
 	let elem = document.createElement('div');
 	elem.innerHTML = comic.title;
 	document.querySelector('#comic').appendChild(elem);
+
+	// scroll page so that title is aligned at top of page by default
+	document.querySelector('#ctitle').scrollIntoView(true);
+
 
 
 })();
