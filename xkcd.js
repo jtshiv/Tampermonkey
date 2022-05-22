@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         xkcd
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  try to take over the world!
 // @author       jtshiv
 // @updateURL	 https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/xkcd.js
@@ -28,4 +28,12 @@
 				break;
 		}
 	});
+	
+	// Get alt text and add to div below image
+	let comic = document.querySelector('#comic > img');
+	let elem = document.createElement('div');
+	elem.innerHTML = comic.title;
+	document.querySelector('#comic').appendChild(elem);
+
+
 })();
