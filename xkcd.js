@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         xkcd
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  try to take over the world!
 // @author       jtshiv
 // @updateURL	 https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/xkcd.js
