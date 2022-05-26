@@ -171,6 +171,51 @@
         
     // };
 
+	// these functions are to grab the image from a team's page and
+	// get the hex code for the most common color
+	function draw(img) {
+	    var canvas = document.createElement("canvas");
+	    var c = canvas.getContext('2d');
+	    c.width = canvas.width = img.width;
+	    c.height = canvas.height = img.height;
+	    c.clearRect(0, 0, c.width, c.height);
+	    c.drawImage(img, 0, 0, img.width , img.height);
+	    return c; // returns the context
+	}
+	// returns a map counting the frequency of each color
+	// in the image on the canvas
+	function getColors(c) {
+	    var col, colors = {};
+	    var pixels, r, g, b, a;
+	    r = g = b = a = 0;
+	    pixels = c.getImageData(0, 0, c.width, c.height);
+	    for (var i = 0, data = pixels.data; i < data.length; i += 4) {
+		r = data[i];
+		g = data[i + 1];
+		b = data[i + 2];
+		a = data[i + 3]; // alpha
+		// skip pixels >50% transparent
+		if (a < (255 / 2))
+		    continue;
+		col = rgbToHex(r, g, b);
+		if (!colors[col])
+		    colors[col] = 0;
+		colors[col]++;
+	    }
+	    return colors;
+	}
+
+	function rgbToHex(r, g, b) {
+	    if (r > 255 || g > 255 || b > 255)
+		throw "Invalid color component";
+	    return ((r << 16) | (g << 8) | b).toString(16);
+	}
+	//let img = document.querySelector('.ClubhouseHeader__Main img.Logo');	
+	//let canvas = draw(img);
+	//let colors = getColors(img);
+	//Object.keys(colors).reduce(function(a, b){ return colors[a] > colors[b] ? a : b });
+
+
     // This is what runs where there are changes
 	var observer = new MutationObserver(function(mutations) {
         
