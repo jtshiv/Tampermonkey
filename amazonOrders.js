@@ -15,4 +15,12 @@
     'use strict';
 
     // Your code here...
+    
+    // this code will make a frame and have it target the order page of the first item on the orders
+    let frame=document.createElement('iframe');
+    frame.id='theframe';
+    document.body.appendChild(frame);
+    document.querySelectorAll('.a-section.js-item');
+    frame.src='https://www.amazon.com/gp/aw/ya?oid=' + document.querySelectorAll('.a-section.js-item a')[0].href.match(/(?:.*orderId=)(.*)(?:&.*)/)[1];
+    frame.contentDocument.querySelector('#od-formatted-total')
 })();
