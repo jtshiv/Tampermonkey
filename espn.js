@@ -19,19 +19,17 @@
     // https://raw.githubusercontent.com/jtshiv/Tampermonkey/dev/espn.js
 
     console.log('ESPN Score unSpoiler script started');
-	$(document).ready(function(){
-		console.log('Document ready');
 
-        // Add CSS to do the edits to the classes.
-        // This does the heavy lifting then the other
-        // JS will just add or remove classes.
-        if ($('#unspoilerStyle').length){
-            $('#unspoilerStyle').remove();
-        };
-        var style = document.createElement('style');
-        style.id = "unspoilerStyle";
-        style.innerHTML = 
-            `
+    // Add CSS to do the edits to the classes.
+    // This does the heavy lifting then the other
+    // JS will just add or remove classes.
+    if (document.querySelector('#unspoilerStyle')){
+        document.querySelector('#unspoilerStyle').remove();
+    };
+    var style = document.createElement('style');
+    style.id = "unspoilerStyle";
+    style.innerHTML = 
+        `
             .editedBorder{
                 border-style:solid;
                 border-color:red;
@@ -85,8 +83,7 @@
                 display: none !important;
             }
             `;
-        document.head.appendChild(style);
-	});
+    document.head.appendChild(style);
 
     // Function to insert node in after another
     // Keeping here just in case
@@ -94,7 +91,9 @@
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     };
 
-    
+    function addListener(el,type,callback){
+        el.addEventListener(type,callback,{once:true});
+    }
 
     /**
      * Function to unhide originals when clicked
@@ -103,14 +102,14 @@
      */
     function clickUnhide(elems,className){
         // This allows for specific css only to this
-        elems.addClass('edited editedBorder');
-        // The actual listener
-        elems.on("click.clickUnhide", function(e){
-            e.stopImmediatePropagation();
-            e.preventDefault();
-            this.classList.remove(className);
-            this.classList.remove('editedBorder');
-            $(this).off("click.clickUnhide");
+        Array.from(elems).forEach(x=>{
+            x.classList.add('edited','editedBorder');
+            addListener(x,'click',function(e){
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                this.classList.remove(className);
+                this.classList.remove('editedBorder');
+            });
         });
     };
 
