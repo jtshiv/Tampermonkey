@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.9.7
+// @version      1.0
 // @description  Remove scores and spoilers from espn.com
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/espn.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -19,19 +19,17 @@
     // https://raw.githubusercontent.com/jtshiv/Tampermonkey/dev/espn.js
 
     console.log('ESPN Score unSpoiler script started');
-	$(document).ready(function(){
-		console.log('Document ready');
 
-        // Add CSS to do the edits to the classes.
-        // This does the heavy lifting then the other
-        // JS will just add or remove classes.
-        if ($('#unspoilerStyle').length){
-            $('#unspoilerStyle').remove();
-        };
-        var style = document.createElement('style');
-        style.id = "unspoilerStyle";
-        style.innerHTML = 
-            `
+    // Add CSS to do the edits to the classes.
+    // This does the heavy lifting then the other
+    // JS will just add or remove classes.
+    if (document.querySelector('#unspoilerStyle')){
+        document.querySelector('#unspoilerStyle').remove();
+    };
+    var style = document.createElement('style');
+    style.id = "unspoilerStyle";
+    style.innerHTML = 
+        `
             .editedBorder{
                 border-style:solid;
                 border-color:red;
@@ -85,8 +83,7 @@
                 display: none !important;
             }
             `;
-        document.head.appendChild(style);
-	});
+    document.head.appendChild(style);
 
     // Function to insert node in after another
     // Keeping here just in case
@@ -94,7 +91,9 @@
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     };
 
-    
+    function addListener(el,type,callback){
+        el.addEventListener(type,callback,{once:true});
+    }
 
     /**
      * Function to unhide originals when clicked
@@ -103,14 +102,14 @@
      */
     function clickUnhide(elems,className){
         // This allows for specific css only to this
-        elems.addClass('edited editedBorder');
-        // The actual listener
-        elems.on("click.clickUnhide", function(e){
-            e.stopImmediatePropagation();
-            e.preventDefault();
-            this.classList.remove(className);
-            this.classList.remove('editedBorder');
-            $(this).off("click.clickUnhide");
+        Array.from(elems).forEach(x=>{
+            x.classList.add('edited','editedBorder');
+            addListener(x,'click',function(e){
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                this.classList.remove(className);
+                this.classList.remove('editedBorder');
+            });
         });
     };
 
@@ -120,8 +119,14 @@
         
         // Grabs the selector that doesn't already have scoresTab. Needed as
         // otherwise it'll keep adding event listeners to trigger multiple times
-        var items=$('.cscore:not(.scoresTab):not(.edited)').has('[data-mptype="scoreboard"]').not(":has('.cscore_score--record')")
-        items.addClass('scoresTab');
+        let items=document.querySelectorAll('.cscore:not(.scoresTab):not(.edited)')
+        items = Array.from(items).filter(x=>{
+            return (x.querySelectorAll('[data-mptype="scoreboard"]').length);
+        });
+        items = Array.from(items).filter(x=>{
+            return (!x.querySelectorAll('.cscore_score--record').length);
+        });
+        Array.from(items).forEach(x=>{x.classList.add('scoresTab')});
         
         // Add the click listener to unhide the class
         clickUnhide(items,'scoresTab');
@@ -131,52 +136,41 @@
     function homeTab(){
         //This will be for the main page articles that have a score (not scoreboards)
         
-        var items=$('article.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"][class*="-winner"]');
-        items.addClass('homeTab');
+        //var items=$('article.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"][class*="-winner"]');
+        
+        let items=document.querySelectorAll('.hasGame:not(.homeTab):not(.edited)')
+        items = Array.from(items).filter(x=>{
+            return (x.querySelectorAll('[class*="team-"], [class*="-winner"]').length);
+        });
+        Array.from(items).forEach(x=>{
+            x.classList.add('homeTab');
+        });
         
         // Add the click listener to unhide the class
         clickUnhide(items,'homeTab');
-        
-        items=$('section.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"]')
-        items.addClass('homeTab');
-        clickUnhide(items,'homeTab');
-
-        items=$('article.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"]')
-        items.addClass('homeTab');
-        clickUnhide(items,'homeTab');
     };
 
-    // League Scores Tab
-    // function lScoresTab(){
-    //     //Scores tab instead of a league
-        
-    //     try{
-    //         var items=$('section.Scoreboard:not(.lScoresTab)');
-    //     }catch(e){
-    //         console.log(e);
-    //     };
-    //     if (!items.length){
-    //         try{
-    //             var items=$$('section.Scoreboard:not(.lScoresTab)');
-    //         }catch(e){
-    //             console.log(e);
-    //         };
-    //     }
-    //     items.forEach(function(elem){
-    //         elem.classList.add('lScoresTab');
-    //     });
+     //League Scores Tab
+     function lScoresTab(){
+         //Scores tab instead of a league
 
-    //     // Add the click listener to unhide the class
-    //     clickUnhide(items,'lScoresTab');
+         //var items=$('section.Scoreboard:not(.lScoresTab)');
+         let items=document.querySelectorAll('.Scoreboard:not(.lScoresTab):not(.edited)');
+         Array.from(items).forEach(x=>{
+             x.classList.add('lScoresTab');
+         });
+
+         // Add the click listener to unhide the class
+         clickUnhide(items,'lScoresTab');
         
-    // };
+     };
 
     // This is what runs where there are changes
 	var observer = new MutationObserver(function(mutations) {
         
         scoresTab();
         homeTab();
-        // lScoresTab();
+        lScoresTab();
         
         
 	});
