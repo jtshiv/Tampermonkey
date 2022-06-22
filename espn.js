@@ -136,18 +136,17 @@
     function homeTab(){
         //This will be for the main page articles that have a score (not scoreboards)
         
-        var items=$('article.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"][class*="-winner"]');
-        items.addClass('homeTab');
+        //var items=$('article.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"][class*="-winner"]');
+        
+        let items=document.querySelectorAll('.hasGame:not(.homeTab):not(.edited)')
+        items = Array.from(items).filter(x=>{
+            return (x.querySelectorAll('[class*="team-"], [class*="-winner"]').length);
+        });
+        Array.from(items).forEach(x=>{
+            x.classList.add('homeTab');
+        });
         
         // Add the click listener to unhide the class
-        clickUnhide(items,'homeTab');
-        
-        items=$('section.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"]')
-        items.addClass('homeTab');
-        clickUnhide(items,'homeTab');
-
-        items=$('article.hasGame:not(.homeTab):not(.edited)').has('[class*="team-"]')
-        items.addClass('homeTab');
         clickUnhide(items,'homeTab');
     };
 
