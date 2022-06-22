@@ -119,8 +119,14 @@
         
         // Grabs the selector that doesn't already have scoresTab. Needed as
         // otherwise it'll keep adding event listeners to trigger multiple times
-        var items=$('.cscore:not(.scoresTab):not(.edited)').has('[data-mptype="scoreboard"]').not(":has('.cscore_score--record')")
-        items.addClass('scoresTab');
+        let items=document.querySelectorAll('.cscore:not(.scoresTab):not(.edited)')
+        items = Array.from(items).filter(x=>{
+            return (x.querySelectorAll('[data-mptype="scoreboard"]').length);
+        });
+        items = Array.from(items).filter(x=>{
+            return (!x.querySelectorAll('.cscore_score--record').length);
+        });
+        Array.from(items).forEach(x=>{x.classList.add('scoresTab')});
         
         // Add the click listener to unhide the class
         clickUnhide(items,'scoresTab');
