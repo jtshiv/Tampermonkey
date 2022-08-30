@@ -1,15 +1,12 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.3
+// @version      0.4
 // @description  Custom set of rules to block sites
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
-// @match        https://www.automateexcel.com/*
-// @match        https://duckduckgo.com/*
-// @match        https://stackoverflow.com/*
-// @match        https://askubuntu.com/*
+// @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.com
 // @grant        none
 // @run-at       document-start
@@ -25,10 +22,11 @@
     var startInt = setInterval(starter,500);
     function starter(){
         let d = document.domain;
-        let stkexch = ['stackoverflow.com','askubuntu.com'];
+        let stkexch = ['stackexchange.com','stackoverflow.com','askubuntu.com'];
+        let stkWin = stkexch.filter(x=>{return window.location.href.includes(x)});
         if (d === 'www.automateexcel.com'){
             automateExcel();
-        } else if(stkexch.indexOf(d) != -1){
+        } else if(stkexch.indexOf(d) != -1 || (stkWin)){
             stackexchange();
         }
         // default will clear the interval if not on supported url
