@@ -1,13 +1,15 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.2
+// @version      0.3
 // @description  Custom set of rules to block sites
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
 // @match        https://www.automateexcel.com/*
 // @match        https://duckduckgo.com/*
+// @match        https://stackoverflow.com/*
+// @match        https://askubuntu.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.com
 // @grant        none
 // @run-at       document-start
@@ -22,21 +24,35 @@
     // interval that loads fn based on domain
     var startInt = setInterval(starter,500);
     function starter(){
-        switch (document.domain){
-            case 'www.automateexcel.com':
-                automateExcel();
-                break;
-            default:
-                // clear interval if not on supported domain
-                clearInterval(startInt);
+        let d = document.domain;
+        let stkexch = ['stackoverflow.com','askubuntu.com'];
+        if (d === 'www.automateexcel.com'){
+            automateExcel();
+        } else if(stkexch.indexOf(d) != -1){
+            stackexchange();
+        }
+        // default will clear the interval if not on supported url
+        else {
+            clearInterval(startInt);
         }
     }
 
     // Duck Duck Go web default if not defined
     // Not in the interval so that it loads earlier
-    if (!window.location.href.includes("&ia=")){
-        window.open(window.location.href + "&ia=web","_self");
+    if (document.domain === 'duckduckgo.com'){
+        if (!window.location.href.includes("&ia=")){
+            window.open(window.location.href + "&ia=web","_self");
+        }
     };
+
+    // Stack Exchange Sites
+    function stackexchange(){
+        // bottom sign up bar
+        [...document.querySelectorAll('[data-campaign-name="stk"]')].forEach(x=>x.remove());
+        // remove sidebar & make main bar fill space
+        [...document.querySelectorAll('#sidebar')].forEach(x=>x.remove());
+        [...document.querySelectorAll('#mainbar')].forEach(x=>x.style.width = 'auto');
+    }
 
     // Automate Excel
     function automateExcel(){
