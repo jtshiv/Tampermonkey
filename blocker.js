@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.4.1
+// @version      0.5
 // @description  Custom set of rules to block sites
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -31,11 +31,34 @@
         } else if(document.querySelectorAll('.s-topbar--item[href="https://stackexchange.com"]')){
             // alternate stack exchange site finder based on link to main site
             stackexchange();
+        } if (d === 'www.reddit.com'){
+            reddit();
         }
         // default will clear the interval if not on supported url
         else {
             clearInterval(startInt);
         }
+    }
+
+    // Reddit
+    function reddit(){
+        // auto click the stupid 'see this post in app' banner
+        try{
+            [...document.querySelector('shreddit-experience-tree').shadowRoot.querySelector('shreddit-async-loader').shadowRoot.querySelector('xpromo-app-selector').shadowRoot.querySelectorAll('button.continue')].forEach(x=>x.click());
+        }catch(e){};
+        // auto click stupid view more button
+        try{
+            [...document.querySelector('shreddit-comment-tree').shadowRoot.querySelectorAll('button.expand-button')].forEach(x=>x.click());
+        }catch(e){};
+        // remove stupid unverified subreddit blocker garbage shit
+        try{
+            [...document.querySelectorAll('.XPromoBlockingModal.m-active')].forEach(x=>x.classList.remove('m-active'));
+        }catch(e){};
+        // allow scroll when their shitty blocker pops up
+        try{
+            [...document.querySelectorAll('body.scroll-disabled')].forEach(x=>x.classList.remove('scroll-disabled'));
+        }catch(e){};
+
     }
 
     // Duck Duck Go web default if not defined
@@ -57,6 +80,8 @@
         [...document.querySelectorAll('.js-consent-banner')].forEach(x=>x.remove());
         // top info pane about other se sites
         [...document.querySelectorAll('.js-dismissable-hero')].forEach(x=>x.remove());
+        // teams pane in left sidebar
+        [...document.querySelectorAll('.js-freemium-cta')].forEach(x=>x.remove());
     }
 
     // Automate Excel
