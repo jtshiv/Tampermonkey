@@ -57,6 +57,8 @@
         [...document.querySelectorAll('.js-consent-banner')].forEach(x=>x.remove());
         // top info pane about other se sites
         [...document.querySelectorAll('.js-dismissable-hero')].forEach(x=>x.remove());
+        // teams pane in left sidebar
+        [...document.querySelectorAll('.js-freemium-cta')].forEach(x=>x.remove());
     }
 
     // Automate Excel
