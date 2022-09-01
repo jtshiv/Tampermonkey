@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.4
+// @version      0.4.1
 // @description  Custom set of rules to block sites
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -28,6 +28,9 @@
             automateExcel();
         } else if(stkexch.indexOf(d) != -1 || (stkWin)){
             stackexchange();
+        } else if(document.querySelectorAll('.s-topbar--item[href="https://stackexchange.com"]')){
+            // alternate stack exchange site finder based on link to main site
+            stackexchange();
         }
         // default will clear the interval if not on supported url
         else {
@@ -50,6 +53,10 @@
         // remove sidebar & make main bar fill space
         [...document.querySelectorAll('#sidebar')].forEach(x=>x.remove());
         [...document.querySelectorAll('#mainbar')].forEach(x=>x.style.width = 'auto');
+        // bottom-left consent pane
+        [...document.querySelectorAll('.js-consent-banner')].forEach(x=>x.remove());
+        // top info pane about other se sites
+        [...document.querySelectorAll('.js-dismissable-hero')].forEach(x=>x.remove());
     }
 
     // Automate Excel
