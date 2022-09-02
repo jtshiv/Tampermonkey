@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.5.1
+// @version      0.5.2
 // @description  Custom set of rules to block sites
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -26,9 +26,7 @@
         let stkWin = stkexch.filter(x=>{return window.location.href.includes(x)});
         if (d === 'www.automateexcel.com'){
             automateExcel();
-        } else if(stkexch.indexOf(d) != -1 || (stkWin)){
-            stackexchange();
-        } else if(document.querySelectorAll('.s-topbar--item[href="https://stackexchange.com"]')){
+        } else if(document.querySelectorAll('.s-topbar--item[href="https://stackexchange.com"]').length){
             // alternate stack exchange site finder based on link to main site
             stackexchange();
         } else if (d === 'www.reddit.com'){
