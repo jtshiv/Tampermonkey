@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.5
+// @version      0.5.1
 // @description  Custom set of rules to block sites
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -31,13 +31,24 @@
         } else if(document.querySelectorAll('.s-topbar--item[href="https://stackexchange.com"]')){
             // alternate stack exchange site finder based on link to main site
             stackexchange();
-        } if (d === 'www.reddit.com'){
+        } else if (d === 'www.reddit.com'){
             reddit();
+        } else if (d === 'twitter.com'){
+            twitter();
         }
         // default will clear the interval if not on supported url
         else {
             clearInterval(startInt);
         }
+    }
+
+    // Twitter
+    function twitter(){
+        // the you gotsta sign in herp derp window and scroll block
+        [...document.querySelectorAll('div[role="group"]')].forEach(x=>{
+                [...document.querySelectorAll('[data-testid="sheetDialog"]')].forEach(y=>x.remove());
+        });
+        document.querySelector('html').style.overflow="auto";
     }
 
     // Reddit
