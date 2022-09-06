@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.5.2
+// @version      0.5.3
 // @description  Custom set of rules to block sites
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -33,11 +33,21 @@
             reddit();
         } else if (d === 'twitter.com'){
             twitter();
+        } else if (d === "www.amazon.com"){
+            amazon();
+        } else if (d === "stackoverflow.com"){
+            stackexchange();
         }
         // default will clear the interval if not on supported url
         else {
             clearInterval(startInt);
         }
+    }
+    
+    // Amazon
+    function amazon(){
+        // buy again at bottom
+        [...document.querySelectorAll('#rhf')].forEach(x=>x.remove());
     }
 
     // Twitter
