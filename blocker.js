@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.5.3
+// @version      0.5.4
 // @description  Custom set of rules to block sites
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -64,6 +64,12 @@
         // auto click the stupid 'see this post in app' banner
         try{
             [...document.querySelector('shreddit-experience-tree').shadowRoot.querySelector('shreddit-async-loader').shadowRoot.querySelector('xpromo-app-selector').shadowRoot.querySelectorAll('button.continue')].forEach(x=>x.click());
+        }catch(e){};
+        // another type of 'see in app' banner
+        try{
+            document.querySelectorAll('button.XPromoPopup__actionButton').forEach(x=>{
+                if(x.innerText=="Continue"){x.click()};
+            });
         }catch(e){};
         // auto click stupid view more button
         try{
