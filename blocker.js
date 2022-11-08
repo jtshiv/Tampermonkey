@@ -57,6 +57,14 @@
                 [...document.querySelectorAll('[data-testid="sheetDialog"]')].forEach(y=>x.remove());
         });
         document.querySelector('html').style.overflow="auto";
+        // credential picker for google
+        document.querySelectorAll('#credential_picker_iframe').forEach(x=>x.remove());
+        // twits are better in app dawg
+        document.querySelectorAll('.r-l5o3uw').forEach(x=>{
+            x.querySelectorAll('span').forEach(y=>{
+                y.innerText === "Not now" ? y.click() : null;
+            })
+        });
     }
 
     // Reddit
