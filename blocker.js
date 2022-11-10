@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.5.4
+// @version      0.5.5
 // @description  Custom set of rules to block sites
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -88,11 +88,11 @@
 
     // Duck Duck Go web default if not defined
     // Not in the interval so that it loads earlier
-    if (document.domain === 'duckduckgo.com'){
+    /*if (document.domain === 'duckduckgo.com'){
         if (!window.location.href.includes("&ia=")){
             window.open(window.location.href + "&ia=web","_self");
         }
-    };
+    };*/
 
     // Stack Exchange Sites
     function stackexchange(){
