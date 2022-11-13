@@ -96,11 +96,11 @@
 
     // Duck Duck Go web default if not defined
     // Not in the interval so that it loads earlier
-    if (document.domain === 'duckduckgo.com'){
+    /*if (document.domain === 'duckduckgo.com'){
         if (!window.location.href.includes("&ia=")){
             window.open(window.location.href + "&ia=web","_self");
         }
-    };
+    };*/
 
     // Stack Exchange Sites
     function stackexchange(){
