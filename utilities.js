@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Utilities
-// @version      1.4.2
+// @version      1.4.3
 // @include      *
 // @require      file://C:\Users\shivjo5\Documents\Scripts\Tampermonkey\utilities.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        none
+// @run-at       document-start
 // @noframes
 // ==/UserScript==
 
