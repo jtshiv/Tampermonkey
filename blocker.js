@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.5.6
+// @version      0.5.7
 // @description  Custom set of rules to block sites
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -31,6 +31,8 @@
             stackexchange();
         } else if (d === 'www.reddit.com'){
             reddit();
+        } else if (d === 'www.youtube.com'){
+            youtube();
         } else if (d === 'twitter.com'){
             twitter();
         } else if (d === "www.amazon.com"){
@@ -44,6 +46,12 @@
         }
     }
     
+    // Youtube
+    function youtube(){
+        // pause overlay
+        document.querySelectorAll('.ytp-pause-overlay-container').forEach(x=>x.remove());
+    }
+
     // Amazon
     function amazon(){
         // buy again at bottom
