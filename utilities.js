@@ -1,6 +1,8 @@
 // ==UserScript==
 // @name         Utilities
 // @version      1.4.3
+// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/utilities.js
+// @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @include      *
 // @require      file://C:\Users\shivjo5\Documents\Scripts\Tampermonkey\utilities.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
