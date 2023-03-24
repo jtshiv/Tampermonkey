@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mobile Edit
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.0.1
 // @description  Modify css on pages to format better for mobile
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/mobileEdit.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -25,7 +25,6 @@
         meta.name = "viewport";
         document.head.appendChild(meta);
         console.log(meta);
-        document.head.querySelectorAll('meta[name="viewport"]').forEach(x=>x.remove());
         var theid = "styleForMobile";
         document.head.querySelectorAll('#' + theid).forEach(x=>x.remove());
         var css = document.createElement('style');
