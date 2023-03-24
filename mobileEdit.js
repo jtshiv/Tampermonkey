@@ -29,8 +29,8 @@
         var theid = "styleForMobile";
         document.head.querySelectorAll('#' + theid).forEach(x=>x.remove());
         var css = document.createElement('style');
-        css.innerHTML = `/* For screens smaller than 768px (typical mobile devices) */
-    @media screen and (max-width: 767px) {
+        css.innerHTML = `/* For screens smaller than 1000px (amazon's min width for desktop) */
+    @media screen and (max-width: 1000px) {
     [class^="your-orders-content-container"], #navbar-main, #navbar{
         max-width: 100% !important;
     }
