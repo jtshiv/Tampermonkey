@@ -4,7 +4,7 @@
 // @namespace     namespace_adisib
 // @description   Select a youtube resolution and resize the player.
 // @updateURL     https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/myoutube.js
-// @version       2023.04.04
+// @version       2023.04.04.1
 // @match         https://m.youtube.com/*
 // @noframes
 // @grant         none
@@ -117,6 +117,42 @@
 		return el;
 	}
 
+
+	// --------------------
+
+    // this is to set a click listener when in landscape that will auto fullscreen the video
+    var container = document.querySelector('#player-container-id');
+    orientListener();
+
+    window.addEventListener('orientationchange', orientListener);
+
+    function orientListener(){
+            if (window.orientation === 90 || window.orientation === -90) {
+                // Landscape orientation
+                container.addEventListener('click', enterFullScreen);
+            } else {
+                // Portrait orientation
+                container.removeEventListener('click', enterFullScreen);
+            }
+    }
+
+    function enterFullScreen() {
+        let video = document.querySelector('button.fullscreen-icon');
+        video.click();
+        container.removeEventListener('click', enterFullScreen);
+    }
+
+    // Add an event listener for the fullscreenchange event
+    document.addEventListener('fullscreenchange', function(event) {
+        // Check if the element is currently in fullscreen mode
+        if (!document.fullscreenElement) {
+            console.log('The element has exited fullscreen mode.');
+            if (window.orientation === 90 || window.orientation === -90) {
+                // Landscape orientation
+                container.addEventListener('click', enterFullScreen);
+            };
+        }
+    });
 
 	// --------------------
 
