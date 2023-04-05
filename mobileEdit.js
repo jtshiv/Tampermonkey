@@ -49,7 +49,13 @@
             }
             .nav-fill{
                 /*width: 100% !important;*/
-                }
+            }
+            #pageContent{
+                min-width: unset !important;
+            }
+            #gw-layout .a-section, #gw-card-layout {
+                overflow-x: auto !important;
+            }
             .a-fixed-right-grid-inner {
                 padding-right: 0 !important; /* make full width */
             }
