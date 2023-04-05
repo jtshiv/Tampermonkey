@@ -6,6 +6,7 @@
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/mobileEdit.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       You
+// @match        https://www.amazon.com*
 // @match        https://www.amazon.com/gp/your-account/order-history*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.com
 // @grant        none
@@ -18,7 +19,7 @@
     console.log("Starting Mobile Edit");
 
     // Amazon Orders
-    if(document.location.href.includes("https://www.amazon.com/gp/your-account/order-history")){
+    if(document.location.href.includes("https://www.amazon.com")){
         document.head.querySelectorAll('meta[name="viewport"]').forEach(x=>x.remove());
         var meta = document.createElement('meta');
         meta.content = "width=device-width, maximum-scale=1, minimum-scale=1, initial-scale=1, user-scalable=no, shrink-to-fit=no";
