@@ -4,7 +4,7 @@
 // @namespace     namespace_adisib
 // @description   Select a youtube resolution and resize the player.
 // @updateURL     https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/myoutube.js
-// @version       2023.04.04.1
+// @version       2023.04.06
 // @match         https://m.youtube.com/*
 // @noframes
 // @grant         none
@@ -273,13 +273,16 @@
             let tc = Date.now()
             let quality = JSON.parse(localStorage.getItem("ythd-quality"));
             let run = false;
-            if ( (curVid !== quality.id) || (ytPlayer.getPlaybackQuality() !== quality.res) ){
-                run = true;
-                console.log("set run resolution change");
-                console.log(ytPlayer.getPlaybackQuality())
-                console.log(quality.res)
-                console.log(JSON.stringify(quality));
-                //debugger;
+            if (!quality){run = true};
+            if (run === false){
+                if ( (curVid !== quality.id) || (ytPlayer.getPlaybackQuality() !== quality.res) ){
+                    run = true;
+                    console.log("set run resolution change");
+                    console.log(ytPlayer.getPlaybackQuality())
+                    console.log(quality.res)
+                    console.log(JSON.stringify(quality));
+                    //debugger;
+                }
             }
             //let quality = {"id":id,"res":resolutionList[nextBestIndex],"expiration": te,"creation":tc};
             //localStorage.setItem("ythd-quality",JSON.stringify(quality));
