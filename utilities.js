@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Utilities
-// @version      1.4.3
+// @version      1.4.4
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/utilities.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @include      *
@@ -184,8 +184,20 @@
     let dyslexicstyle = document.createElement('style');
     dyslexicstyle.id = 'dyslexicstyle';
     dyslexicstyle.innerHTML = dyslexic;
-    document.head.append(dyslexicstyle);
+    addStyle(dyslexicstyle);
 
+    function addStyle(elem){
+        if(!document.head){
+            setTimeout(addStyle,100,elem);
+            return;
+        };
+        document.head.append(elem);
+        // have dyslexic off for some domains
+        if (elem.id !== 'dyslexicstyle'){return};
+        if (d === "www.youtube.com" || d === "m.youtube.com"){
+            elem.disabled = true;
+        }
+    };
 
     /*
     This section is to toggle the css for the open dyslexic font
