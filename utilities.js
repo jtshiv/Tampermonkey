@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Utilities
-// @version      1.4.4
+// @version      2023.04.25.1
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/utilities.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @include      *
@@ -194,6 +194,7 @@
         document.head.append(elem);
         // have dyslexic off for some domains
         if (elem.id !== 'dyslexicstyle'){return};
+        let d = document.domain;
         if (d === "www.youtube.com" || d === "m.youtube.com"){
             elem.disabled = true;
         }
