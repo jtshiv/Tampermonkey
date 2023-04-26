@@ -3,8 +3,8 @@
 // @author        adisib - edit by me
 // @namespace     namespace_adisib
 // @description   Select a youtube resolution and resize the player.
-// @updateURL     https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/myoutube.js
-// @version       2023.04.06
+// @downloadURL   https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/myoutube.user.js
+// @version       2023.04.26.1
 // @match         https://m.youtube.com/*
 // @noframes
 // @grant         none
