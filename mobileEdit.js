@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Mobile Edit
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
+// @version      2023.04.26.1
 // @description  Modify css on pages to format better for mobile
-// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/mobileEdit.js
+// @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/mobileEdit.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       You
 // @match        https://www.amazon.com*

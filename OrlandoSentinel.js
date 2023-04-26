@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Orlando Sentinel
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.7
+// @version      2023.04.26.1
 // @description  Remove blocks that block you from reading
 // @author       jtshiv
 // @match        https://www.orlandosentinel.com
 // @include      https://www.orlandosentinel.com*
-// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/OrlandoSentinel.js
+// @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/os.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
 // @run-at       document-idle
