@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      0.5.7
+// @version      2023.04.26.1
 // @description  Custom set of rules to block sites
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -56,6 +56,11 @@
     function amazon(){
         // buy again at bottom
         [...document.querySelectorAll('#rhf')].forEach(x=>x.remove());
+        // remove tracker portion in <a> links
+        document.querySelectorAll('a').forEach(x=>{
+            if (!x.href.includes('/dp/')){return};
+            x.href = x.href.match(/(^.*\/dp\/(?:(?!\/|\?).)*)/gi,"")[0];
+        });
     }
 
     // Twitter
