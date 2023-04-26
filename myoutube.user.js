@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name          Youtube HD Mobile
+// @name          Youtube HD Mobile Beta
 // @author        adisib - edit by me
 // @namespace     namespace_adisib
 // @description   Select a youtube resolution and resize the player.
-// @downloadURL   https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/myoutube.user.js
-// @version       2023.04.26.1
+// @downloadURL   https://raw.githubusercontent.com/jtshiv/Tampermonkey/myoutube/myoutube.user.js
+// @version       2023.04.26.2
 // @match         https://m.youtube.com/*
 // @noframes
 // @grant         none
