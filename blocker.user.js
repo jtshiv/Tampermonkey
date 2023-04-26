@@ -3,7 +3,7 @@
 // @namespace    https://github.com/jtshiv/Tampermonkey
 // @version      0.5.7
 // @description  Custom set of rules to block sites
-// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.js
+// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
 // @include      *
