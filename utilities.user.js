@@ -1,10 +1,9 @@
 // ==UserScript==
 // @name         Utilities
-// @version      2023.04.25.1
-// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/utilities.js
+// @version      2023.04.26.1
+// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/utilities.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @include      *
-// @require      file://C:\Users\shivjo5\Documents\Scripts\Tampermonkey\utilities.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        none
 // @run-at       document-start
