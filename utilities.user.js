@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Utilities
-// @version      2023.04.26.1
-// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/utilities.user.js
+// @name         Utilities Beta
+// @version      2023.04.26.2
+// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/utilities/utilities.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
@@ -148,7 +148,7 @@
 
 
     // Set OpenDyslexic font
-    let excepts = ['.wf-family-owa','.el','.fa','.fab','.fad','.fal','.far','.fas','.btn--icon, .btn--top, .header__button, .header__button--menu'];
+    let excepts = ['.wf-family-owa','.el','.fa','.fab','.fad','.fal','.far','.fas','.btn--icon, .btn--top, .header__button, .header__button--menu','.search__clear, .search__button, .search__button--hero','.frm__input__clear, .ddgsi, .ddgsi-b::before, .ddgsi-a::after'];
     var surrounded = excepts.map(item => `:not(${item})`).join('');
     surrounded = surrounded + ':not([class*="Icon"]):not([class*="icon"])';
 
