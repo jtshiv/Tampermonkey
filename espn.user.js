@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler Beta
-// @version      2023.04.28.3
+// @version      2023.04.28.4
 // @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/espn/espn.user.js
 // @namespace    https://github.com/jtshiv/Tampermonkey
 // @description  Remove scores and spoilers from espn.com
@@ -9,6 +9,7 @@
 // @match        https://www.espn.com/
 // @include      https://www.espn.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=espn.com
+// @run-at       document-start
 // @grant        none
 // ==/UserScript==
 
@@ -32,8 +33,8 @@
                 border-color:red;
                 border-width:thin;
             }
-            .editedBorder img.media-wrapper_image{
-                filter: blur(5px);
+            .editedBorder .media-wrapper_image{
+                filter: blur(25px) !important;
             }
             .scoresTab .cscore_name {
                 color: black !important;
@@ -83,7 +84,17 @@
                 display: none !important;
             }
             `;
-    document.head.appendChild(style);
+
+    addStyle(style);
+
+    function addStyle(elem){
+        if(!document.head){
+            setTimeout(addStyle,100,elem);
+            return;
+        };
+        document.head.append(elem);
+    };
+
 
     // Function to insert node in after another
     // Keeping here just in case
