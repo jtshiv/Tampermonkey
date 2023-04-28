@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler Beta
-// @version      2023.04.28.1
+// @version      2023.04.28.2
 // @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/espn/espn.user.js
 // @namespace    https://github.com/jtshiv/Tampermonkey
 // @description  Remove scores and spoilers from espn.com
@@ -31,6 +31,9 @@
                 border-style:solid;
                 border-color:red;
                 border-width:thin;
+            }
+            .editedBorder img{
+                filter: blur(5px);
             }
             .scoresTab .cscore_name {
                 color: black !important;
