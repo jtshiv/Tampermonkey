@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name          Youtube HD Mobile Beta
+// @version       2023.04.28.1
+// @downloadURL   https://raw.githubusercontent.com/jtshiv/Tampermonkey/myoutube/myoutube.user.js
 // @author        adisib - edit by me
 // @namespace     namespace_adisib
 // @description   Select a youtube resolution and resize the player.
-// @downloadURL   https://raw.githubusercontent.com/jtshiv/Tampermonkey/myoutube/myoutube.user.js
-// @version       2023.04.26.2
 // @match         https://m.youtube.com/*
 // @noframes
 // @grant         none
@@ -91,6 +91,31 @@
 
 	let setHeight = 0;
 
+
+	// --------------------
+
+    // add css to make player half size
+    var cssinner = 
+    `.player-size.player-placeholder{
+        max-height: 50vh !important;
+        padding-bottom: 50vh !important;
+    }
+    #player-container-id{
+        max-height: 50% !important;
+        overflow: auto !important;
+    }`
+    var css = document.createElement('style');
+    css.id = 'youtubecss';
+    css.innerHTML = cssinner;
+    addStyle(css);
+
+    function addStyle(elem){
+        if(!document.head){
+            setTimeout(addStyle,100,elem);
+            return;
+        };
+        document.head.append(elem);
+    };
 
 	// --------------------
 
