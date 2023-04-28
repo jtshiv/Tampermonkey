@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name          Youtube HD Mobile Beta
-// @version       2023.04.28.3
+// @version       2023.04.28.4
 // @downloadURL   https://raw.githubusercontent.com/jtshiv/Tampermonkey/myoutube/myoutube.user.js
 // @author        adisib - edit by me
 // @namespace     namespace_adisib
@@ -102,7 +102,7 @@
     }
 	#player-container-id{
         max-height: 50vh !important;
-        overflow: auto !important;
+        overflow: hidden !important;
     }
     #movie_player:not(.ytp-fullscreen){
         height: 50vh !important;
