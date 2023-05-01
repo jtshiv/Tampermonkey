@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name          Youtube HD Mobile Beta
-// @version       2023.04.28.4
+// @version       2023.05.01.1
 // @downloadURL   https://raw.githubusercontent.com/jtshiv/Tampermonkey/myoutube/myoutube.user.js
 // @author        adisib - edit by me
 // @namespace     namespace_adisib
@@ -96,16 +96,18 @@
 
     // add css to make player half size
     var cssinner = 
-    `.player-size.player-placeholder{
-        max-height: 50vh !important;
-        padding-bottom: 50vh !important;
-    }
-	#player-container-id{
-        max-height: 50vh !important;
-        overflow: hidden !important;
-    }
-    #movie_player:not(.ytp-fullscreen){
-        height: 50vh !important;
+    `@media (orientation: landscape){
+        .player-size.player-placeholder{
+            max-height: 50vh !important;
+            padding-bottom: 50vh !important;
+        }
+        #player-container-id{
+            max-height: 50vh !important;
+            overflow: hidden !important;
+        }
+        #movie_player:not(.ytp-fullscreen){
+            height: 50vh !important;
+        }
     }`	
     var css = document.createElement('style');
     var cssid = 'youtubecss';
