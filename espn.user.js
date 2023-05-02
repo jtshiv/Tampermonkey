@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ESPN Score unSpoiler Beta
-// @version      2023.05.01.1
+// @version      2023.05.01.2
 // @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/espn/espn.user.js
 // @namespace    https://github.com/jtshiv/Tampermonkey
 // @description  Remove scores and spoilers from espn.com
@@ -202,7 +202,7 @@
     function startObserver(observer){
         var targetNode = document.body;
         if (!document.body){
-            setTimeout(starObserver,100,observer);
+            setTimeout(startObserver,100,observer);
             return;
         }
         observer.observe(targetNode, observerConfig);
