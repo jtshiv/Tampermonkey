@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2023.04.26.2
+// @version      2023.06.27.1
 // @description  Custom set of rules to block sites
 // @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/blocker/blocker.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -33,6 +33,8 @@
             reddit();
         } else if (d === 'www.youtube.com'){
             youtube();
+        } else if (d === 'm.youtube.com'){
+            youtube();
         } else if (d === 'twitter.com'){
             twitter();
         } else if (d === "www.amazon.com"){
@@ -50,7 +52,16 @@
     function youtube(){
         // pause overlay
         document.querySelectorAll('.ytp-pause-overlay-container').forEach(x=>x.remove());
-    }
+        document.querySelectorAll('a[href]').forEach(x=>{
+            let newHref = stripTParameters(x.href);
+            x.href = newHref;
+        });
+    };
+
+    function stripTParameters(text) {
+        const regex = /(\?|&amp;|&)t=\d+/gi;
+        return text.replace(regex, '');
+    };
 
     // Amazon
     function amazon(){
