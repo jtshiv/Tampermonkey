@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2023.06.27.1
+// @version      2023.09.11.1
 // @description  Custom set of rules to block sites
 // @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/blocker/blocker.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -56,6 +56,25 @@
             let newHref = stripTParameters(x.href);
             x.href = newHref;
         });
+
+        // follow links instead of loading in a frame
+        var theinterval = setInterval(function(){
+            // Select your fallback links using a unique class or ID
+            let fallbackLinks = document.querySelectorAll('a:not(.editedByMe)');
+
+            // Attach event listeners to the fallback links
+            fallbackLinks.forEach(link => {
+                link.classList.add('editedByMe');
+                link.addEventListener('click', function (event) {
+                    event.preventDefault(); // Prevent the default link behavior
+
+                    let href = link.href;
+                    window.location.href = href;
+
+                });
+            });
+
+        }, 500);
     };
 
     function stripTParameters(text) {
