@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2023.09.11.1
+// @version      2023.09.11.2
 // @description  Custom set of rules to block sites
 // @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/blocker/blocker.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -66,6 +66,7 @@
             fallbackLinks.forEach(link => {
                 link.classList.add('editedByMe');
                 link.addEventListener('click', function (event) {
+                    event.stopImmediatePropagation();
                     event.preventDefault(); // Prevent the default link behavior
 
                     let href = link.href;
