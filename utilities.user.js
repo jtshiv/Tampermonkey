@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Utilities
-// @version      2023.04.26.1
+// @version      2023.10.18.01
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/utilities.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @include      *
@@ -148,9 +148,12 @@
 
 
     // Set OpenDyslexic font
-    let excepts = ['.wf-family-owa','.el','.fa','.fab','.fad','.fal','.far','.fas','.btn--icon, .btn--top, .header__button, .header__button--menu'];
+    let excepts = ['.wf-family-owa','.el','.fa','.fab','.fad','.fal','.far','.fas','.btn--icon, .btn--top, .header__button, .header__button--menu','.search__button','.ddgsi-horn'];
     var surrounded = excepts.map(item => `:not(${item})`).join('');
-    surrounded = surrounded + ':not([class*="Icon"]):not([class*="icon"])';
+    let wilds = ['Icon','icon','material-symbols'];
+    let wildsmap = wilds.map(item => `:not([class*="${item}"])`).join('');
+    //surrounded = surrounded + ':not([class*="Icon"]):not([class*="icon"])';
+    surrounded = surrounded + wildsmap;
 
     let dyslexic = `@font-face {
 	font-family: 'mobiledyslexic-opendyslexic-regular';
