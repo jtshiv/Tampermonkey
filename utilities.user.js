@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Utilities Beta
+// @name         Utilities
 // @version      2023.10.18.01
-// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/utilities/utilities.user.js
+// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/utilities.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
