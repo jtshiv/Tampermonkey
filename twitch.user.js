@@ -14,6 +14,25 @@
 (function() {
     'use strict';
 
+    // interval loop to make links behave as links instead of an app
+    var linkInterval = setInterval(function(){
+        // Select your fallback links using a unique class or ID
+        let fallbackLinks = document.querySelectorAll('a:not(.editedByMe)');
+
+        // Attach event listeners to the fallback links
+        fallbackLinks.forEach(link => {
+            link.classList.add('editedByMe');
+            link.addEventListener('click', function (event) {
+                event.stopImmediatePropagation();
+                event.preventDefault(); // Prevent the default link behavior
+
+                let href = link.href;
+                window.location.href = href;
+
+            });
+        });
+    },500)
+
     // interval to set handler onto video
     var theInterval = setInterval(function(){
         let video = document.querySelector('video');
