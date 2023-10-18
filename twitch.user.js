@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         Twitch
 // @namespace    http://tampermonkey.net/
-// @version      2023.09.21.01
+// @version      2023.10.18.01
 // @description  try to take over the world!
-// @author       You
+// @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/twitch.user.js
+// @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
+// @author       jtshiv
 // @match        https://www.twitch.tv/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=twitch.tv
 // @grant        none
@@ -11,6 +13,25 @@
 
 (function() {
     'use strict';
+
+    // interval loop to make links behave as links instead of an app
+    var linkInterval = setInterval(function(){
+        // Select your fallback links using a unique class or ID
+        let fallbackLinks = document.querySelectorAll('a:not(.editedByMe)');
+
+        // Attach event listeners to the fallback links
+        fallbackLinks.forEach(link => {
+            link.classList.add('editedByMe');
+            link.addEventListener('click', function (event) {
+                event.stopImmediatePropagation();
+                event.preventDefault(); // Prevent the default link behavior
+
+                let href = link.href;
+                window.location.href = href;
+
+            });
+        });
+    },500)
 
     // interval to set handler onto video
     var theInterval = setInterval(function(){
