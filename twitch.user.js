@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Twitch Beta
+// @name         Twitch
 // @namespace    http://tampermonkey.net/
 // @version      2023.10.18.01
 // @description  try to take over the world!
-// @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/twitch/twitch.user.js
+// @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/twitch.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
 // @match        https://www.twitch.tv/*
