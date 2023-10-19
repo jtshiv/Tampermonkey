@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2023.09.11.2
+// @version      2023.10.18.01
 // @description  Custom set of rules to block sites
 // @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
@@ -56,6 +56,8 @@
             let newHref = stripTParameters(x.href);
             x.href = newHref;
         });
+        // kill element causing scroll lock for their stupid vendetta against adblock
+        document.querySelectorAll('tp-yt-paper-dialog.ytd-popup-container').forEach(x=>x.remove());
 
         // follow links instead of loading in a frame
         var theinterval = setInterval(function(){
