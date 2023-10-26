@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         M3U8 Video Detector and Downloader Beta
+// @name         m3u8 Beta
 // @version      2023.11.26.05
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/m3u8/m3u8.user.js
 // @description  Automatically detect the m3u8 video of the page and download it completely. Once detected the m3u8 link, it will appear in the upper right corner of the page. Click download to jump to the m3u8 downloader.
@@ -636,7 +636,7 @@
                 style="
                     margin-left: 10px;
                     cursor: pointer;
-            ">(Download)</span>
+            ">(Remove)</span>
         `;
 
         div.querySelector(".copy-link").addEventListener("click", () => {
@@ -645,7 +645,11 @@
             mgmapi.message("(link copied)", 2000);
         });
 
-        //div.querySelector(".download-btn").addEventListener("click", download);
+        // Replace the default download listener with one that can remove the source instead
+        div.querySelector(".download-btn").addEventListener("click", function(div,bar,count){
+            bar.querySelector(".number-indicator").setAttribute("data-number", count-1);
+            div.remove();
+        });
 
         rootDiv.style.display = "block";
 
