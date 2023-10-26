@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         m3u8 Beta
+// @name         m3u8
 // @version      2023.11.26.05
-// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/m3u8/m3u8.user.js
+// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/m3u8.user.js
 // @description  Automatically detect the m3u8 video of the page and download it completely. Once detected the m3u8 link, it will appear in the upper right corner of the page. Click download to jump to the m3u8 downloader.
 // @icon         https://tools.thatwind.com/favicon.png
 // @author       allFull
