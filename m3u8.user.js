@@ -1,19 +1,10 @@
 // ==UserScript==
-// @name         m3u8视频侦测下载器【自动嗅探】
-// @name:zh-CN   m3u8视频侦测下载器【自动嗅探】
-// @name:zh-TW   m3u8視頻偵測下載器【自動嗅探】
-// @name:en      M3U8 Video Detector and Downloader
-// @version      1.4.1
-// @description  自动检测页面m3u8视频并进行完整下载。检测到m3u8链接后会自动出现在页面右上角位置，点击下载即可跳转到m3u8下载器。
-// @description:zh-CN  自动检测页面m3u8视频并进行完整下载。检测到m3u8链接后会自动出现在页面右上角位置，点击下载即可跳转到m3u8下载器。
-// @description:zh-TW  自動檢測頁面m3u8視頻並進行完整下載。檢測到m3u8鏈接後會自動出現在頁面右上角位置，點擊下載即可跳轉到m3u8下載器。
-// @description:en  Automatically detect the m3u8 video of the page and download it completely. Once detected the m3u8 link, it will appear in the upper right corner of the page. Click download to jump to the m3u8 downloader.
+// @name         M3U8 Video Detector and Downloader
+// @version      2023.10.26.01
+// @description  Automatically detect the m3u8 video of the page and download it completely. Once detected the m3u8 link, it will appear in the upper right corner of the page. Click download to jump to the m3u8 downloader.
 // @icon         https://tools.thatwind.com/favicon.png
 // @author       allFull
-// @namespace    https://tools.thatwind.com/
-// @homepage     https://tools.thatwind.com/tool/m3u8downloader
 // @match        *://*/*
-// @exclude      *://www.diancigaoshou.com/*
 // @require      https://cdn.jsdelivr.net/npm/m3u8-parser@4.7.1/dist/m3u8-parser.min.js
 // @connect      *
 // @grant        unsafeWindow
