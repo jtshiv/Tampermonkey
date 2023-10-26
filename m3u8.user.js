@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         M3U8 Video Detector and Downloader Beta
-// @version      2023.11.26.04
+// @version      2023.11.26.05
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/m3u8/m3u8.user.js
 // @description  Automatically detect the m3u8 video of the page and download it completely. Once detected the m3u8 link, it will appear in the upper right corner of the page. Click download to jump to the m3u8 downloader.
 // @icon         https://tools.thatwind.com/favicon.png
@@ -534,6 +534,7 @@
         return `${bytes.toFixed(2)} ${units[unitIndex]}`;
     }
 
+    let manifestsizes = {playlists: []};
     async function doM3U({ url, content }) {
 
         url = new URL(url);
@@ -550,21 +551,33 @@
 
         if (manifest.segments) {
             let duration = 0;
-            let totalSize = 0;
             manifest.segments.forEach((segment) => {
                 duration += segment.duration;
-                totalSize += segment.byterange.length;
             });
             manifest.duration = duration;
-            totalSize = formatBytes(totalSize);
-            manifest.totalSize = totalSize;
+        }
+        manifest.resolution = "";
+        try {
+            if (manifest.playlists) {
+                manifestsizes.playlists = [...manifest.playlists];
+                console.log(manifestsizes);
+            } else {
+
+                for (let u of manifestsizes.playlists) {
+                    if (u.uri === url.href) {
+                        manifest.resolution = u.attributes.RESOLUTION.width + "x" + u.attributes.RESOLUTION.height;
+                    }
+                }
+            };
+        } catch (e) {
+            console.log(e);
         }
 
         showVideo({
             type: "m3u8",
             url,
             duration: manifest.duration ? `${Math.ceil(manifest.duration * 10 / 60) / 10} mins` : manifest.playlists ? `(Multi)(${manifest.playlists.length})` : "(unknown)"
-            ,size: manifest.totalSize
+            ,size: manifest.resolution
 /* i don't trust url out */
 /*             ,async download() {
                 mgmapi.openInTab(
@@ -600,7 +613,7 @@
         div.className = "m3u8-item";
         div.innerHTML = `
             <span>${type}</span>
-            <span>${size}</span>
+            <span style="margin-left: 10px;">${size}</span>
             <span
                 class="copy-link"
                 title="${url}"
