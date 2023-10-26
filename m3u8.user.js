@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         M3U8 Video Detector and Downloader Beta
-// @version      2023.11.26.03
+// @version      2023.11.26.04
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/m3u8/m3u8.user.js
 // @description  Automatically detect the m3u8 video of the page and download it completely. Once detected the m3u8 link, it will appear in the upper right corner of the page. Click download to jump to the m3u8 downloader.
 // @icon         https://tools.thatwind.com/favicon.png
@@ -516,6 +516,24 @@
         }
     }
 
+    /**
+     * Converts bytes into a human-readable format with units (B, KB, MB, GB).
+     *
+     * @param {number} bytes - The size in bytes to be formatted.
+     * @returns {string} A human-readable size with the appropriate unit.
+     */
+    function formatBytes(bytes) {
+        const units = ['B', 'KB', 'MB', 'GB'];
+        let unitIndex = 0;
+
+        while (bytes >= 1024 && unitIndex < units.length - 1) {
+            bytes /= 1024;
+            unitIndex++;
+        }
+
+        return `${bytes.toFixed(2)} ${units[unitIndex]}`;
+    }
+
     async function doM3U({ url, content }) {
 
         url = new URL(url);
@@ -532,16 +550,21 @@
 
         if (manifest.segments) {
             let duration = 0;
+            let totalSize = 0;
             manifest.segments.forEach((segment) => {
                 duration += segment.duration;
+                totalSize += segment.byterange.length;
             });
             manifest.duration = duration;
+            totalSize = formatBytes(totalSize);
+            manifest.totalSize = totalSize;
         }
 
         showVideo({
             type: "m3u8",
             url,
             duration: manifest.duration ? `${Math.ceil(manifest.duration * 10 / 60) / 10} mins` : manifest.playlists ? `(Multi)(${manifest.playlists.length})` : "(unknown)"
+            ,size: manifest.totalSize
 /* i don't trust url out */
 /*             ,async download() {
                 mgmapi.openInTab(
@@ -570,12 +593,14 @@
         type,
         url,
         duration,
-        download
+        /* download, */
+        size
     }) {
         let div = document.createElement("div");
         div.className = "m3u8-item";
         div.innerHTML = `
             <span>${type}</span>
+            <span>${size}</span>
             <span
                 class="copy-link"
                 title="${url}"
