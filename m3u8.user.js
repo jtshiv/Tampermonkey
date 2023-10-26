@@ -25,8 +25,17 @@
 (function () {
     'use strict';
 
+    /**
+     * Object that contains a set of functions to be used in the rest of the script
+     * 
+     */
     const mgmapi = {
 
+        /**
+         * Add style element to document with passed innerhtml
+         * @param {string} s
+         * @returns {any}
+         */
         addStyle(s) {
             let style = document.createElement("style");
             style.innerHTML = s;
@@ -52,7 +61,7 @@
             return this.openInTab(details.url);
 
             if (typeof GM_download === "function") {
-                this.message("下载中，请留意浏览器下载弹窗\nDownloading, pay attention to the browser's download pop-up.", 3000);
+                this.message("Downloading, pay attention to the browser's download pop-up.", 3000);
                 return GM_download(details);
             } else {
                 this.openInTab(details.url);
@@ -61,7 +70,7 @@
         copyText(text) {
             copyTextToClipboard(text);
             function copyTextToClipboard(text) {
-                // 复制文本
+                // copy text
                 var copyFrom = document.createElement("textarea");
                 copyFrom.textContent = text;
                 document.body.appendChild(copyFrom);
@@ -71,6 +80,12 @@
                 document.body.removeChild(copyFrom);
             }
         },
+        /**
+         * makes text window on the bottom right for notifications to the user. Defaults to 5 seconds.
+         * @param {string} text
+         * @param {integer} disappearTime=5000
+         * @returns {any}
+         */
         message(text, disappearTime = 5000) {
             const id = "f8243rd238-gm-message-panel";
             let p = document.querySelector(`#${id}`);
@@ -108,64 +123,67 @@
     };
 
 
-    if (location.host === "tools.thatwind.com" || location.host === "localhost:3000") {
-        mgmapi.addStyle("#userscript-tip{display:none !important;}");
+    // I don't trust this portion so commenting it out for now
 
-        // 对请求做代理
-        const _fetch = unsafeWindow.fetch;
-        unsafeWindow.fetch = async function (...args) {
-            try {
-                let response = await _fetch(...args);
-                if (response.status !== 200) throw new Error(response.status);
-                return response;
-            } catch (e) {
-                // 失败请求使用代理
-                if (args.length == 1) {
-                    console.log(`请求代理：${args[0]}`);
-                    return await new Promise((resolve, reject) => {
-                        let referer = new URLSearchParams(location.hash.slice(1)).get("referer");
-                        let headers = {};
-                        if (referer) {
-                            referer = new URL(referer);
-                            headers = {
-                                "origin": referer.origin,
-                                "referer": referer.href
-                            };
-                        }
-                        mgmapi.xmlHttpRequest({
-                            method: "GET",
-                            url: args[0],
-                            responseType: 'arraybuffer',
-                            headers,
-                            onload(r) {
-                                resolve({
-                                    status: r.status,
-                                    headers: new Headers(r.responseHeaders.split("\n").filter(n => n).map(s => s.split(/:\s*/)).reduce((all, [a, b]) => { all[a] = b; return all; }, {})),
-                                    async text() {
-                                        return r.responseText;
-                                    },
-                                    async arrayBuffer() {
-                                        return r.response;
-                                    }
-                                });
-                            },
-                            onerror() {
-                                reject(new Error());
-                            }
-                        });
-                    });
-                } else {
-                    throw e;
-                }
-            }
-        }
+    // if (location.host === "tools.thatwind.com" || location.host === "localhost:3000") {
+    //     mgmapi.addStyle("#userscript-tip{display:none !important;}");
 
-        return;
-    }
+    //     // Proxy requests
+    //     const _fetch = unsafeWindow.fetch;
+    //     unsafeWindow.fetch = async function (...args) {
+    //         try {
+    //             let response = await _fetch(...args);
+    //             if (response.status !== 200) throw new Error(response.status);
+    //             return response;
+    //         } catch (e) {
+    //             // Failed request to use proxy
+    //             if (args.length == 1) {
+    //                 console.log(`Failed request to use proxy：${args[0]}`);
+    //                 return await new Promise((resolve, reject) => {
+    //                     let referer = new URLSearchParams(location.hash.slice(1)).get("referer");
+    //                     let headers = {};
+    //                     if (referer) {
+    //                         referer = new URL(referer);
+    //                         headers = {
+    //                             "origin": referer.origin,
+    //                             "referer": referer.href
+    //                         };
+    //                     }
+    //                     mgmapi.xmlHttpRequest({
+    //                         method: "GET",
+    //                         url: args[0],
+    //                         responseType: 'arraybuffer',
+    //                         headers,
+    //                         onload(r) {
+    //                             resolve({
+    //                                 status: r.status,
+    //                                 headers: new Headers(r.responseHeaders.split("\n").filter(n => n).map(s => s.split(/:\s*/)).reduce((all, [a, b]) => { all[a] = b; return all; }, {})),
+    //                                 async text() {
+    //                                     return r.responseText;
+    //                                 },
+    //                                 async arrayBuffer() {
+    //                                     return r.response;
+    //                                 }
+    //                             });
+    //                         },
+    //                         onerror() {
+    //                             reject(new Error());
+    //                         }
+    //                     });
+    //                 });
+    //             } else {
+    //                 throw e;
+    //             }
+    //         }
+    //     }
+
+    //     return;
+    // }
+    
 
 
-    // iframe 信息交流
-    // 目前只用于获取顶部标题
+    // iframe information exchange
+    // Currently only used to get the top title
     window.addEventListener("message", async (e) => {
         if (e.data === "3j4t9uj349-gm-get-title") {
             let name = `top-title-${Date.now()}`;
@@ -180,7 +198,7 @@
                 if (typeof e.data === "string") {
                     if (e.data.startsWith("3j4t9uj349-gm-top-title-name:")) {
                         let name = e.data.slice("3j4t9uj349-gm-top-title-name:".length);
-                        await new Promise(r => setTimeout(r, 5)); // 等5毫秒 确定 setValue 已经写入
+                        await new Promise(r => setTimeout(r, 5)); // Wait 5 milliseconds to confirm that setValue has been written
                         resolve(await mgmapi.getValue(name));
                         mgmapi.deleteValue(name);
                         window.removeEventListener("message", l);
