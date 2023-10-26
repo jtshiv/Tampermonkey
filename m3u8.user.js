@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         M3U8 Video Detector and Downloader
-// @version      2023.10.26.01
+// @version      2023.11.26.02
 // @description  Automatically detect the m3u8 video of the page and download it completely. Once detected the m3u8 link, it will appear in the upper right corner of the page. Click download to jump to the m3u8 downloader.
 // @icon         https://tools.thatwind.com/favicon.png
 // @author       allFull
@@ -211,7 +211,7 @@
 
 
     {
-        // 请求检测
+        // request detection
         // const _fetch = unsafeWindow.fetch;
         // unsafeWindow.fetch = function (...args) {
         //     if (checkUrl(args[0])) doM3U({ url: args[0] });
@@ -244,7 +244,7 @@
         function checkUrl(url) {
             url = new URL(url, location.href);
             if (url.pathname.endsWith(".m3u8") || url.pathname.endsWith(".m3u")) {
-                // 发现
+                // found
                 return true;
             }
         }
@@ -256,7 +256,7 @@
         }
 
 
-        // 检查纯视频
+        // Check Pure Video
         setInterval(doVideos, 1000);
 
     }
@@ -275,7 +275,7 @@
     shadowDOM.appendChild(wrapper);
 
 
-    // 指示器
+    // indicator
     const bar = document.createElement("div");
     bar.style = `
         text-align: right;
@@ -328,7 +328,7 @@
 
     wrapper.appendChild(bar);
 
-    // 样式
+    // style
     const style = document.createElement("style");
 
     style.innerHTML = `
@@ -394,8 +394,17 @@
 
     const barBtn = bar.querySelector(".number-indicator");
 
-    // 关于显隐和移动
+    // About revealing and moving
 
+    /**
+     * Overall, this code appears to create a draggable UI element with the ability to remember 
+     * and update its position and visibility settings using Tampermonkey storage. The x and y 
+     * values are used to control its position, and the shown variable is used to control its 
+     * visibility. The element can be dragged by clicking and dragging the barBtn element, and 
+     * a click on it toggles visibility.
+     * @param {any} asyncfunction(
+     * @returns {any}
+     */
     (async function () {
 
         let shown = await GM_getValue("shown", true);
@@ -462,6 +471,14 @@
     let shownUrls = [];
 
 
+    /**
+     * Overall, the doVideos function seems to be designed to identify and process video 
+     * elements on a web page, adding them to a list of "shown" URLs to avoid processing 
+     * duplicates, and potentially initiating the download of videos that meet specific 
+     * criteria. The actual functionality related to showing and downloading videos would 
+     * likely be implemented in the showVideo function
+     * @returns {any}
+     */
     function doVideos() {
         for (let v of Array.from(document.querySelectorAll("video"))) {
             if (v.duration && v.src && v.src.startsWith("http") && (!shownUrls.includes(v.src))) {
@@ -523,8 +540,9 @@
         showVideo({
             type: "m3u8",
             url,
-            duration: manifest.duration ? `${Math.ceil(manifest.duration * 10 / 60) / 10} mins` : manifest.playlists ? `多(Multi)(${manifest.playlists.length})` : "未知(unknown)",
-            async download() {
+            duration: manifest.duration ? `${Math.ceil(manifest.duration * 10 / 60) / 10} mins` : manifest.playlists ? `(Multi)(${manifest.playlists.length})` : "(unknown)"
+/* i don't trust url out */
+/*             ,async download() {
                 mgmapi.openInTab(
                     `https://tools.thatwind.com/tool/m3u8downloader#${new URLSearchParams({
                         m3u8: url.href,
@@ -532,13 +550,21 @@
                         filename: (await getTopTitle()) || ""
                     })}`
                 );
-            }
+            } */
         })
 
     }
 
 
 
+    /**
+     * the showVideo function is designed to create a user interface element (a video item) 
+     * for displaying video information. It allows users to copy the video link and trigger 
+     * video downloads. The actual display and behavior of this video item are controlled 
+     * by this function, but the interaction with the video content, such as playing or 
+     * displaying the video itself, is not included in this code snippet.
+     * @param {*} param0 
+     */
     async function showVideo({
         type,
         url,
@@ -571,16 +597,16 @@
                 style="
                     margin-left: 10px;
                     cursor: pointer;
-            ">下载(Download)</span>
+            ">(Download)</span>
         `;
 
         div.querySelector(".copy-link").addEventListener("click", () => {
             // 复制链接
             mgmapi.copyText(url.href);
-            mgmapi.message("已复制链接 (link copied)", 2000);
+            mgmapi.message("(link copied)", 2000);
         });
 
-        div.querySelector(".download-btn").addEventListener("click", download);
+        //div.querySelector(".download-btn").addEventListener("click", download);
 
         rootDiv.style.display = "block";
 
@@ -595,7 +621,8 @@
 
 })();
 
-(function () {
+// disabled magnet link handling
+/* (function () {
     'use strict';
 
     const reg = /magnet:\?xt=urn:btih:\w{10,}([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -764,3 +791,4 @@
     }
 
 })();
+ */
