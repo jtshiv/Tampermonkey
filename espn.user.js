@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         ESPN Score unSpoiler Beta
+// @name         ESPN Score unSpoiler
 // @version      2023.10.27.01
-// @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/espn/espn.user.js
+// @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/espn.user.js
 // @namespace    https://github.com/jtshiv/Tampermonkey
 // @description  Remove scores and spoilers from espn.com
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
