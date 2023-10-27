@@ -1,22 +1,20 @@
 // ==UserScript==
-// @name         ESPN Score unSpoiler
+// @name         ESPN Score unSpoiler Beta
+// @version      2023.10.27.01
+// @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/espn/espn.user.js
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2023.04.26.1
 // @description  Remove scores and spoilers from espn.com
-// @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/espn.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
 // @match        https://www.espn.com/
 // @include      https://www.espn.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=espn.com
+// @run-at       document-start
 // @grant        none
 // ==/UserScript==
 
 (function() {
     'use strict';
-
-    // Dev brach:
-    // https://raw.githubusercontent.com/jtshiv/Tampermonkey/dev/espn.js
 
     console.log('ESPN Score unSpoiler script started');
 
@@ -34,6 +32,9 @@
                 border-style:solid;
                 border-color:red;
                 border-width:thin;
+            }
+            .editedBorder .media-wrapper_image{
+                filter: blur(25px) !important;
             }
             .scoresTab .cscore_name {
                 color: black !important;
@@ -83,7 +84,17 @@
                 display: none !important;
             }
             `;
-    document.head.appendChild(style);
+
+    addStyle(style);
+
+    function addStyle(elem){
+        if(!document.head){
+            setTimeout(addStyle,100,elem);
+            return;
+        };
+        document.head.append(elem);
+    };
+
 
     // Function to insert node in after another
     // Keeping here just in case
@@ -166,14 +177,14 @@
      };
 
     // This is what runs where there are changes
-	var observer = new MutationObserver(function(mutations) {
-        
+	//var observer = new MutationObserver(function(mutations) {
+    var repeat = setInterval(function(){
         scoresTab();
         homeTab();
         lScoresTab();
         
         
-	});
+	},200);
 
 	/* Notify me of everything! */
 	var observerConfig = {
@@ -185,8 +196,17 @@
 
 	/* Node, config */
 	/* In this case we'll listen to all changes to body and child nodes */
-	var targetNode = document.body;
-	observer.observe(targetNode, observerConfig);
-
+	//var targetNode = document.body;
+	//observer.observe(targetNode, observerConfig);
+    //startObserver(observer);
+    /*function startObserver(observer){
+        var targetNode = document.body;
+        if (!document.body){
+            setTimeout(startObserver,100,observer);
+            return;
+        }
+        observer.observe(targetNode, observerConfig);
+    };
+*/
     
 })();
