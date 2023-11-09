@@ -1,19 +1,108 @@
 // ==UserScript==
 // @name         Utilities Beta
-// @version      2023.10.25.01
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/utilities/utilities.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
+// @version      2023.11.09.02
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
-// @grant        none
+// @grant        GM_addElement
+// @grant        GM_xmlhttpRequest
+// @grant        GM_getResourceText
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_deleteValue
+// @grant        GM_setClipboard
+// @grant        unsafeWindow
 // @run-at       document-start
-// @noframes
 // ==/UserScript==
 
 (function() {
     'use strict';
 
     // Your code here...
+    console.log("Utilities script has started");
+
+    // object with the utilities scripts in them
+    const myapi = {
+        /**
+         * Description
+         * @param {object} details js object such as { method: 'GET', url: 'https://blah', onload:function(response){} }
+         * @returns {any}
+         */
+        async httpReq(details){
+            return await ((typeof GM_xmlhttpRequest === "function") ? GM_xmlhttpRequest : console.log("Error: GM_xmlhttpRequest"))(details);
+        },
+        /**
+         * Add element to page.
+         * @param {string} tag type of element to add
+         * @param {object} attributes js object such as { textContent: this is the innerHTML } or { src: 'http://blah.js', type: 'text/javascript' }
+         * @param {element} parent optional element to append to
+         * @returns {element} created element
+         */
+        addElem(tag,attributes,parent = false){
+            let elem;
+            if (parent === false){
+                elem = GM_addElement(tag,attributes);
+            } else {
+                elem = GM_addElement(parent,tag,attributes);
+            };
+            return elem;
+        },
+        /**
+         * Description
+         * @param {innerHTML} s the css
+         * @returns {element} the added element
+         */
+        addStyle(s){
+            return this.addElem("style",{textContent: s})
+        },
+        createSnackbar(message){
+            return createSnackbar(message);
+        },
+        createSnackbarFade(message){
+            return createSnackbarFade(message);
+        },
+        createSnackbarFn1(message,callback){
+            return createSnackbarFn1(message,callback);
+        },
+        toggleDyslexic(){
+            return toggleDyslexic();
+        },
+        async getValue(name, defaultVal){
+            return await (GM_getValue)(name, defaultVal)
+        },
+        async setValue(name, defaultVal){
+            return await (GM_setValue)(name, value)
+        },
+        async deleteValue(name){
+            return await (GM_deleteValue)(name)
+        },
+        message(text,disappearTime = 5000){
+
+        },
+        async copyText(text){
+            await (GM_setClipboard)(text);
+            console.log("clipboard set: " + text);
+            return text;
+        }
+    };
+    unsafeWindow.myapi = myapi;
+
+
+
+
+    // iframe information exchange
+    if (unsafeWindow.top === unsafeWindow.self) {   // Top level window
+        unsafeWindow.addEventListener("message", async (e) => {
+            if (e.data === "myapi"){
+
+            }
+        })
+    } else {                            // somewhere inside an iframe
+        //unsafeWindow.top.postMessage("myapi","*");
+    }
+    
+
 
     let styleMain = `
         .snackbar {
@@ -49,15 +138,15 @@
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;}}
         `;
 
-    // load functions into window. Only works as long as @grant is none
-    window.createSnackbar = createSnackbar;
-    window.createSnackbarFade = createSnackbarFade;
-    window.createSnackbarFn1 = createSnackbarFn1;
+    // load functions into window.
+    unsafeWindow.createSnackbar = createSnackbar;
+    unsafeWindow.createSnackbarFade = createSnackbarFade;
+    unsafeWindow.createSnackbarFn1 = createSnackbarFn1;
 
     function getMaxZIndex() {
         return Math.max(
             ...Array.from(document.querySelectorAll('body *'), el =>
-                parseFloat(window.getComputedStyle(el).zIndex),
+                parseFloat(unsafeWindow.getComputedStyle(el).zIndex),
             ).filter(zIndex => !Number.isNaN(zIndex)),
             0,
         );
@@ -173,6 +262,7 @@
 * 	.far == Font Awesome
 * 	.fas == Font Awesome
 *   .btn--icon, .btn--top, .header__button, .header__button--menu == duckduckgo icons
+*   .sapUshellShellHeadItmCntnt == top search buttons in fiori
 */
 
     ` + surrounded + `{
@@ -188,8 +278,11 @@
     dyslexicstyle.innerHTML = dyslexic;
     addStyle(dyslexicstyle);
 
+    /* function to add styles to head
+     * if head doesn't exist, waits
+     * and tries again */
     function addStyle(elem){
-        if(!document.head){
+        if (!document.head){
             setTimeout(addStyle,100,elem);
             return;
         };
@@ -198,14 +291,15 @@
         if (elem.id !== 'dyslexicstyle'){return};
         let d = document.domain;
         if (d === "www.youtube.com" || d === "m.youtube.com"){
-            elem.disabled = true;
-        }
+        elem.disabled = true;
+}
     };
+
 
     /*
     This section is to toggle the css for the open dyslexic font
     */
-    window.toggleDyslexic = toggleDyslexic;
+    unsafeWindow.toggleDyslexic = toggleDyslexic;
     function toggleDyslexic() {
         // Get the element with the specified ID
         var element = document.getElementById('dyslexicstyle');
@@ -219,7 +313,5 @@
             console.log('Disabled OpenDyslexic');
         }
     }
-
-
 })();
 
