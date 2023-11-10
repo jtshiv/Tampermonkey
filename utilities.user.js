@@ -2,7 +2,7 @@
 // @name         Utilities
 // @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/utilities.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2023.11.09.02
+// @version      2023.11.09.03
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -239,7 +239,7 @@
     // Set OpenDyslexic font
     let excepts = ['.wf-family-owa','.el','.fa','.fab','.fad','.fal','.far','.fas','.btn--icon, .btn--top, .header__button, .header__button--menu','.search__button','.ddgsi-horn'];
     var surrounded = excepts.map(item => `:not(${item})`).join('');
-    let wilds = ['Icon','icon','material-symbols','google-symbols'];
+    let wilds = ['Icon','icon','material-symbols','google-symbols','-fa'];
     let wildsmap = wilds.map(item => `:not([class*="${item}"])`).join('');
     //surrounded = surrounded + ':not([class*="Icon"]):not([class*="icon"])';
     surrounded = surrounded + wildsmap;
