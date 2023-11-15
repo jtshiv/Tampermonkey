@@ -1,6 +1,5 @@
 // ==UserScript==
-// @name         Utilities
-// @updateURL    https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/utilities.user.js
+// @name         Utilities Beta
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @version      2023.11.09.03
 // @include      *
