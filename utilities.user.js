@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Utilities Beta
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2023.11.09.03
+// @version      2023.11.15.01
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -237,11 +237,21 @@
 
     // Set OpenDyslexic font
     let excepts = ['.wf-family-owa','.el','.fa','.fab','.fad','.fal','.far','.fas','.btn--icon, .btn--top, .header__button, .header__button--menu','.search__button','.ddgsi-horn'];
-    var surrounded = excepts.map(item => `:not(${item})`).join('');
     let wilds = ['Icon','icon','material-symbols','google-symbols','-fa'];
+    let begins = [];
+    let host = window.location.host;
+    // host specific
+    if (host === "www.walmart.com" ){
+        // add walmart's ld classes
+        excepts.push('.ld');
+        begins.push('.ld-');
+    }
+
+    var surrounded = excepts.map(item => `:not(${item})`).join('');
     let wildsmap = wilds.map(item => `:not([class*="${item}"])`).join('');
-    //surrounded = surrounded + ':not([class*="Icon"]):not([class*="icon"])';
     surrounded = surrounded + wildsmap;
+    let beginsmap = begins.map(item => `:not([class^="${item}"])`).join('');
+    surrounded = surrounded + beginsmap;
 
     let dyslexic = `@font-face {
 	font-family: 'mobiledyslexic-opendyslexic-regular';
