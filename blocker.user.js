@@ -1,9 +1,8 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2023.10.18.01
+// @version      2023.11.27.01
 // @description  Custom set of rules to block sites
-// @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/blocker/blocker.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
 // @include      *
@@ -63,19 +62,31 @@
         var theinterval = setInterval(function(){
             // Select your fallback links using a unique class or ID
             let fallbackLinks = document.querySelectorAll('a:not(.editedByMe)');
+            let shortsLinks = document.querySelectorAll('a[href*="youtube.com/shorts/"]');
 
             // Attach event listeners to the fallback links
             fallbackLinks.forEach(link => {
                 link.classList.add('editedByMe');
+                // change click function to use href
                 link.addEventListener('click', function (event) {
                     event.stopImmediatePropagation();
                     event.preventDefault(); // Prevent the default link behavior
 
                     let href = link.href;
+                    // change shorts to normal videos
+                    href = href.replace("youtube.com/shorts/","youtube.com/watch?v=");
                     window.location.href = href;
 
                 });
             });
+
+            // remove the yt shorts url with normal watch
+            shortsLinks.forEach(link => {
+                let href = link.href;
+                // change shorts to normal videos
+                href = href.replace("youtube.com/shorts/","youtube.com/watch?v=");
+                link.href = href
+            })
 
         }, 500);
     };
