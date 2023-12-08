@@ -1,7 +1,6 @@
 // ==UserScript==
-// @name         Menu
-// @namespace    http://tampermonkey.net/
-// @version      2023.11.07.02
+// @name         Menu Beta
+// @version      2023.12.08.01
 // @description  Show menu of scripts
 // @author       You
 // @include      *
@@ -13,6 +12,17 @@
 (async function() {
     'use strict';
     console.log("Menu script has started");
+
+    // load script info to determine which menu url to open
+    var info = GM_info;
+    var scriptslink;
+    if (info.script.name === "Menu"){
+        scriptslink = "https://github.com/jtshiv/Bookmarklets/raw/main/menuscripts.js";
+    } else { // is beta
+        scriptslink = "https://github.com/jtshiv/Bookmarklets/raw/menu/menuscripts.js";
+    }
+
+    console.log("Menu will load from: " + scriptslink);
 
     // waits until myapi is loaded by utilities
     while (typeof myapi !== 'object') {
@@ -26,7 +36,7 @@
             if (typeof (window.menuLoaded) == 'undefined' || force === true){
                 await myapi.httpReq({
                     method: 'GET',
-                    url: "http://localhost:8000/menuscripts.js",
+                    url: "https://github.com/jtshiv/Bookmarklets/raw/main/menuscripts.js",
                     onload: function (response){
                         myapi.addElem('script',{
                             textContent: response.responseText
