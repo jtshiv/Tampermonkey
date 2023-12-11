@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Menu Beta
-// @version      2023.12.08.01
+// @version      2023.12.11.01
 // @description  Show menu of scripts
 // @author       You
 // @include      *
@@ -17,9 +17,9 @@
     var info = GM_info;
     var scriptslink;
     if (info.script.name === "Menu"){
-        scriptslink = "https://github.com/jtshiv/Bookmarklets/raw/main/menuscripts.js";
+        scriptslink = "https://github.com/jtshiv/Tampermonkey/raw/main/menuscripts.js";
     } else { // is beta
-        scriptslink = "https://github.com/jtshiv/Bookmarklets/raw/menu/menuscripts.js";
+        scriptslink = "https://github.com/jtshiv/Tampermonkey/raw/menu/menuscripts.js";
     }
 
     console.log("Menu will load from: " + scriptslink);
