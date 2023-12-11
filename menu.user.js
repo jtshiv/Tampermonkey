@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Menu Beta
-// @version      2023.12.11.01
+// @version      2023.12.11.02
 // @description  Show menu of scripts
 // @author       You
 // @include      *
@@ -36,7 +36,7 @@
             if (typeof (window.menuLoaded) == 'undefined' || force === true){
                 await myapi.httpReq({
                     method: 'GET',
-                    url: "https://github.com/jtshiv/Bookmarklets/raw/main/menuscripts.js",
+                    url: scriptslink,
                     onload: function (response){
                         myapi.addElem('script',{
                             textContent: response.responseText
