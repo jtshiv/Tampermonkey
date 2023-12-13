@@ -135,7 +135,13 @@ function mainScript(){
         
     } else if (host == 'en.wikipedia.org'){
         myapi.addElem('p',{id:'rmWikiRef',textContent:'Remove Wikipedia References'},modal.querySelector('.modal-body')).addEventListener('click',rmWikiRef);
+    
+    } else if (host == 'oldschool.runescape.wiki'){
+        myapi.addElem('p',{id:'hostheader',textContent:'~~~Host Specific~~~'},modal.querySelector('.modal-body'));
+        myapi.addElem('p',{id:'osrsToc',textContent:'OSRS Floating ToC'},modal.querySelector('.modal-body')).addEventListener('click',osrsToc);
+        
     }
+
 
     // functions by baseurl
     if (baseurl == 'https://verizon.us2.blackline.com/Modules/Reconciliations/ExecGrid.aspx'){ // bsqSearch function
@@ -145,11 +151,10 @@ function mainScript(){
 
     // functions by href
     if (href == 'https://oldschool.runescape.wiki/w/Optimal_quest_guide'){
-        /*
-        createNodes('p','hrefheader','~~~Page Specific~~~',modal.querySelector('.modal-body'));
-        createNodes('p', 'osrsOptimalQuestGuide', 'Check boxes based on completed quests', modal.querySelector('.modal-body'), osrsOptimalQuestGuide);
-        createNodes('p', 'osrsOqgToggle', 'Toggle visibility of completed quests', modal.querySelector('.modal-body'), osrsOqgToggleCompleted);
-        */
+        myapi.addElem('p',{id:'hrefheader',textContent:'~~~Page Specific~~~'},modal.querySelector('.modal-body'));
+        myapi.addElem('p',{id:'osrsOptimalQuestGuide',textContent:'Check boxes based on completed quests'},modal.querySelector('.modal-body')).addEventListener('click',osrsOptimalQuestGuide);
+        myapi.addElem('p',{id:'osrsOqgToggle',textContent:'Toggle visibility of completed quests'},modal.querySelector('.modal-body')).addEventListener('click',osrsOqgToggleCompleted);
+
     }
 
 
@@ -159,6 +164,117 @@ function mainScript(){
 function hideModal(){
     document.querySelectorAll('#myModal').forEach(x=>x.style.display="none");
 }
+
+function osrsToc() {
+    hideModal();
+    /* Check if the floating-toc style element already exists */
+    if (document.getElementById('floating-toc-style')) {
+        return; /* Exit if the style element already exists */
+    }
+
+    /* Select the table of contents element */
+    var tocElement = document.querySelector('#toc');
+
+    /* Get the initial offset position of the table of contents */
+    var tocOffset = tocElement.offsetTop;
+
+    /* Create a new <style> element for the floating-toc CSS */
+    var styleElement = document.createElement('style');
+    styleElement.id = 'floating-toc-style';
+    styleElement.innerHTML = `
+        /* CSS for the floating-toc */
+        .floating-toc {
+        position: fixed;
+        top: 0;
+        z-index: 9999;
+        }
+    `;
+
+    /* Inject the <style> element into the <head> of the document */
+    document.head.appendChild(styleElement);
+
+    /* Add a scroll event listener */
+    window.addEventListener('scroll', function() {
+        /* Calculate the current scroll position */
+        var scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+        /* Check if the scroll position has passed the table of contents */
+        if (scrollPosition >= tocOffset) {
+        /* Add a CSS class to make the table of contents float */
+        tocElement.classList.add('floating-toc');
+        } else {
+        /* Remove the CSS class if the scroll position is above the table of contents */
+        tocElement.classList.remove('floating-toc');
+        }
+    });
+};
+
+/**
+ * Goes through the Optimal Quest Guide on OSRS Wiki and checks the boxes at the
+ * top based on the quests marked as completed in the main list.
+ * @returns {any}
+ */
+function osrsOptimalQuestGuide(){
+    hideModal();
+    document.querySelectorAll('li:not(.checked)>a:first-child').forEach(x=>{
+        let y = document.querySelector('tr.highlight-on[data-rowid="' + x.innerText + '"]');
+        if (y){
+            x.parentElement.classList.add("checked");
+        }
+    });
+
+}
+
+/**
+ * Toggle the completed quests on list to make scrolling easier
+ * @returns {any}
+ */
+function osrsOqgToggleCompleted(){
+    
+    let tohide;
+    // check if .hide-highlight is used or not
+    let hidden = document.querySelectorAll('.hide-highlight').length;
+    if (hidden >= 1){ // at least some hidden so rem classes
+        tohide = 0;
+    } else{
+        tohide = 1;
+    }
+
+    // go through and either add class or remove
+    let highlighted = document.querySelectorAll('tr.highlight-on');
+
+    highlighted.forEach(x=>{
+        if (tohide === 1){
+            x.classList.add('hide-highlight');
+        } else {
+            try {
+                x.classList.remove('hide-highlight');
+            } catch (error) {
+                
+            }
+        }
+    })
+
+
+    /* css to hide children of highlighted */
+    let id = 'osrsOqgT';
+    document.querySelectorAll('#' + id).forEach(x=>{x.remove()});
+    let styleElement = document.createElement('style');
+    styleElement.id = id;
+    styleElement.innerHTML = `
+        .hide-highlight{
+            height: 20px;
+            display: block;
+            background-color: #bbee91;
+        }
+        .hide-highlight > * {
+            display: none;
+        }
+    `;
+
+    document.head.appendChild(styleElement);
+}
+
 
 function rmWikiRef(){
     hideModal();
