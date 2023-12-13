@@ -167,7 +167,8 @@ function hideModal(){
     });
 }
 
-function rmListYt(close=true){
+function rmListYt(){
+    hideModal();
 
     // run every second for when user scrolls down
     let listInterval = setInterval(function(){
@@ -194,37 +195,18 @@ function rmListYt(close=true){
 
     },1000);
 
-    // close modal
-    if (close){
-        document.querySelector('#myModal').style.display = "none";
-    }
 }
 
-function rmWatchedYt(n=0){
-    let elems = document.querySelectorAll('ytd-playlist-video-renderer.ytd-playlist-video-list-renderer,ytm-playlist-video-renderer');
+function rmWatchedYt(){
+    hideModal();
 
-    //check if there's loading spinner in the bottom
-    // mobile is: ytm-continuation-item-renderer class=spinner
-    if(n!==-1 && document.querySelectorAll('ytd-continuation-item-renderer,ytm-continuation-item-renderer').length > 0){
-        //scroll down
-        if(n>=elems.length){
-            n=elems.length-1;
-        };
-        try{
-            elems[n].scrollIntoView();
-        }catch(e){};
-        
-        //redo it again. if modal is closed then don't try again
-        console.log(n);
-        console.log(elems.length-1);
-        if(n===elems.length){
-            window.scrollTo(0,0);
-            n=-21;
-        };
-        if (document.querySelector('#myModal').style.display!=='none'){
-            setTimeout(function(){rmWatchedYt(n+10)}, 500);
-        } else{
-            window.scrollTo(0,0);
+    // run every second for when user scrolls down
+    let listInterval = setInterval(function(){
+        let elems = document.querySelectorAll('ytd-playlist-video-renderer.ytd-playlist-video-list-renderer,ytm-playlist-video-renderer');
+
+        //check if there's loading spinner in the bottom
+        // mobile is: ytm-continuation-item-renderer class=spinner
+        if(document.querySelectorAll('ytd-continuation-item-renderer,ytm-continuation-item-renderer').length > 0){
             let ratio = .8;
             elems.forEach(x=>{
                 let y = x.querySelectorAll('#progress,div.thumbnail-overlay-resume-playback-progress');
@@ -236,31 +218,20 @@ function rmWatchedYt(n=0){
                     } catch(e){};
                 });
             });
-            setTimeout(function(){rmWatchedYt(-1)}, 1000);
-            window.scrollTo(0,0);
-            // run remove playlist links
-            rmListYt(false)
-        };
-    } else {
-        window.scrollTo(0,0);
-        let ratio = .8;
-        elems.forEach(x=>{
-            let y = x.querySelectorAll('#progress,div.thumbnail-overlay-resume-playback-progress');
-            y.forEach(prog=>{
-                try {
-                    if(prog.offsetWidth / prog.parentNode.offsetWidth >= ratio){
-                        x.remove();
-                    };
-                } catch(e){};
+        } else { // desktop
+            let ratio = .8;
+            elems.forEach(x=>{
+                let y = x.querySelectorAll('#progress,div.thumbnail-overlay-resume-playback-progress');
+                y.forEach(prog=>{
+                    try {
+                        if(prog.offsetWidth / prog.parentNode.offsetWidth >= ratio){
+                            x.remove();
+                        };
+                    } catch(e){};
+                });
             });
-        });
-        console.log("... IS DONE! *metal riffs*");  
-        document.querySelector('#myModal').style.display = "none";
-        window.scrollTo(0,0);
-        // run remove playlist links
-        rmListYt(false)
-    }
-
+        }
+    },1000);
 };
 
 // Go from YouTube Channel to the uploads playlist full
