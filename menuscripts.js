@@ -132,6 +132,12 @@ function mainScript(){
         myapi.addElem('p',{id:'hostheader',textContent:'~~~Host Specific~~~'},modal.querySelector('.modal-body'));
         myapi.addElem('p',{id:'osrsToc',textContent:'OSRS Floating ToC'},modal.querySelector('.modal-body')).addEventListener('click',osrsToc);
         
+    } else if (host == 'www.youtube.com' || host == 'm.youtube.com'){
+        myapi.addElem('p',{id:'hostheader',textContent:'~~~Host Specific~~~'},modal.querySelector('.modal-body'));
+        myapi.addElem('p',{id:'rmListYt',textContent:'Remove List from YT Urls'},modal.querySelector('.modal-body')).addEventListener('click',rmListYt);
+        myapi.addElem('p',{id:'rmWatchedYt',textContent:'Remove Watched from YT Playlist'},modal.querySelector('.modal-body')).addEventListener('click',rmWatchedYt);
+        myapi.addElem('p',{id:'ytChannelToPlaylist',textContent:'YT Channel to Upload Playlist'},modal.querySelector('.modal-body')).addEventListener('click',ytChannelToPlaylist);
+
     }
 
 
@@ -160,6 +166,111 @@ function hideModal(){
         modal.remove();
     });
 }
+
+function rmListYt(close=true){
+
+    // run every second for when user scrolls down
+    let listInterval = setInterval(function(){
+        let reg = /&list=.*&index=\d+/;
+        /*desktop*/
+        let elem;
+        for (elem of document.querySelectorAll('#video-title')){
+            try{
+                elem.href = elem.href.replace(reg,"");
+            }catch(e){};
+        }
+        /*mobile image*/
+        for (elem of document.querySelectorAll('.compact-media-item-image')){
+            try{
+                elem.href = elem.href.replace(reg,"");
+            }catch(e){};
+        }
+        /*mobile other*/
+        for (elem of document.querySelectorAll('.compact-media-item-metadata-content')){
+            try{
+                elem.href = elem.href.replace(reg,"");
+            }catch(e){};
+        }
+
+    },1000);
+
+    // close modal
+    if (close){
+        document.querySelector('#myModal').style.display = "none";
+    }
+}
+
+function rmWatchedYt(n=0){
+    let elems = document.querySelectorAll('ytd-playlist-video-renderer.ytd-playlist-video-list-renderer,ytm-playlist-video-renderer');
+
+    //check if there's loading spinner in the bottom
+    // mobile is: ytm-continuation-item-renderer class=spinner
+    if(n!==-1 && document.querySelectorAll('ytd-continuation-item-renderer,ytm-continuation-item-renderer').length > 0){
+        //scroll down
+        if(n>=elems.length){
+            n=elems.length-1;
+        };
+        try{
+            elems[n].scrollIntoView();
+        }catch(e){};
+        
+        //redo it again. if modal is closed then don't try again
+        console.log(n);
+        console.log(elems.length-1);
+        if(n===elems.length){
+            window.scrollTo(0,0);
+            n=-21;
+        };
+        if (document.querySelector('#myModal').style.display!=='none'){
+            setTimeout(function(){rmWatchedYt(n+10)}, 500);
+        } else{
+            window.scrollTo(0,0);
+            let ratio = .8;
+            elems.forEach(x=>{
+                let y = x.querySelectorAll('#progress,div.thumbnail-overlay-resume-playback-progress');
+                y.forEach(prog=>{
+                    try {
+                        if(prog.offsetWidth / prog.parentNode.offsetWidth >= ratio){
+                            x.remove();
+                        };
+                    } catch(e){};
+                });
+            });
+            setTimeout(function(){rmWatchedYt(-1)}, 1000);
+            window.scrollTo(0,0);
+            // run remove playlist links
+            rmListYt(false)
+        };
+    } else {
+        window.scrollTo(0,0);
+        let ratio = .8;
+        elems.forEach(x=>{
+            let y = x.querySelectorAll('#progress,div.thumbnail-overlay-resume-playback-progress');
+            y.forEach(prog=>{
+                try {
+                    if(prog.offsetWidth / prog.parentNode.offsetWidth >= ratio){
+                        x.remove();
+                    };
+                } catch(e){};
+            });
+        });
+        console.log("... IS DONE! *metal riffs*");  
+        document.querySelector('#myModal').style.display = "none";
+        window.scrollTo(0,0);
+        // run remove playlist links
+        rmListYt(false)
+    }
+
+};
+
+// Go from YouTube Channel to the uploads playlist full
+function ytChannelToPlaylist(){
+    let base = document.querySelector('meta[property="og:url"][content*="channel\/UC"]');
+    if (base===null){return};
+    let id = "UU" + base.content.replace(/.*channel\/UC/,'');
+    window.open('https://www.youtube.com/playlist?list=' + id,'_self');
+}
+
 
 function playbackSpeed(){
     let answer = prompt("What playback speed? Set as 1 for 100%.");/* Pausing will reset the playback speed");*/
