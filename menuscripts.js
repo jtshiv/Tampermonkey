@@ -244,6 +244,8 @@ function ytChannelToPlaylist(){
 
 
 function playbackSpeed(){
+    hideModal();
+
     let answer = prompt("What playback speed? Set as 1 for 100%.");/* Pausing will reset the playback speed");*/
     if(answer!=null){
         let elems = document.getElementsByTagName('video');
@@ -253,7 +255,6 @@ function playbackSpeed(){
             alert("Video element not found");
         };
     };
-    document.querySelector('#myModal').style.display = "none";
 };
 
 function osrsToc() {
