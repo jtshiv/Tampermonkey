@@ -110,19 +110,10 @@ function mainScript(){
 
     // Show and add listener to close on x
     let span = document.getElementsByClassName("close")[0];
-    span.onclick = async function() {
-        modal.style.display = "none";
-        await new Promise(r=>setTimeout(r,5000));
-        modal.remove();
-    }
+    span.addEventListener('click', hideModal);
     // When the user clicks anywhere outside of the modal, close it
-    window.onclick = async function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-            await new Promise(r=>setTimeout(r,5000));
-            modal.remove();
-        }
-    }
+    window.addEventListener('click', hideModal);
+
     // Set functions
     myapi.addElem('p',{id:'toggledys',textContent:'Toggle Dyslexic'},modal.querySelector('.modal-body')).addEventListener('click',myapi.toggleDyslexic);
     myapi.addElem('p',{id:'copyClicked',textContent:'Copy Clicked Element'},modal.querySelector('.modal-body')).addEventListener('click',copyClicked);
@@ -162,7 +153,11 @@ function mainScript(){
 }
 
 function hideModal(){
-    document.querySelectorAll('#myModal').forEach(x=>x.style.display="none");
+    document.querySelectorAll('#myModal').forEach(async modal=>{
+        modal.style.display="none";
+        await new Promise(r=>setTimeout(r,5000));
+        modal.remove();
+    });
 }
 
 function osrsToc() {
