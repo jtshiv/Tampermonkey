@@ -117,6 +117,7 @@ function mainScript(){
     // Set functions
     myapi.addElem('p',{id:'toggledys',textContent:'Toggle Dyslexic'},modal.querySelector('.modal-body')).addEventListener('click',myapi.toggleDyslexic);
     myapi.addElem('p',{id:'copyClicked',textContent:'Copy Clicked Element'},modal.querySelector('.modal-body')).addEventListener('click',copyClicked);
+    myapi.addElem('p',{id:'playbackSpeed',textContent:'Playback Speed'},modal.querySelector('.modal-body')).addEventListener('click',playbackSpeed);
 
     // functions by host
     if (host == 'mail.google.com'){
@@ -159,6 +160,19 @@ function hideModal(){
         modal.remove();
     });
 }
+
+function playbackSpeed(){
+    let answer = prompt("What playback speed? Set as 1 for 100%.");/* Pausing will reset the playback speed");*/
+    if(answer!=null){
+        let elems = document.getElementsByTagName('video');
+        if(elems.length){
+            elems[0].playbackRate=parseFloat(answer);
+        } else{
+            alert("Video element not found");
+        };
+    };
+    document.querySelector('#myModal').style.display = "none";
+};
 
 function osrsToc() {
     hideModal();
