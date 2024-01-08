@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          Youtube HD Mobile
 // @downloadURL   https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/myoutube.user.js
-// @version       2023.05.01.1
+// @version       2024.01.08.01
 // @author        adisib - edit by me
 // @namespace     namespace_adisib
 // @description   Select a youtube resolution and resize the player.
@@ -169,6 +169,11 @@
     }
 
     function enterFullScreen() {
+		// exit fn if already fullscreen
+		if (document.fullscreenElement != null){
+			container.removeEventListener('click', enterFullScreen);
+			return;
+		};
         let video = document.querySelector('button.fullscreen-icon');
         video.click();
         container.removeEventListener('click', enterFullScreen);
