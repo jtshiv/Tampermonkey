@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name          Youtube HD Mobile Beta
-// @version       2023.05.01.1
+// @version       2024.01.08.01
 // @downloadURL   https://raw.githubusercontent.com/jtshiv/Tampermonkey/myoutube/myoutube.user.js
 // @author        adisib - edit by me
 // @namespace     namespace_adisib
@@ -169,6 +169,11 @@
     }
 
     function enterFullScreen() {
+		// exit fn if already fullscreen
+		if (document.fullscreenElement != null){
+			container.removeEventListener('click', enterFullScreen);
+			return;
+		};
         let video = document.querySelector('button.fullscreen-icon');
         video.click();
         container.removeEventListener('click', enterFullScreen);
