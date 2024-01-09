@@ -138,6 +138,10 @@ function mainScript(){
         myapi.addElem('p',{id:'rmWatchedYt',textContent:'Remove Watched from YT Playlist'},modal.querySelector('.modal-body')).addEventListener('click',rmWatchedYt);
         myapi.addElem('p',{id:'ytChannelToPlaylist',textContent:'YT Channel to Upload Playlist'},modal.querySelector('.modal-body')).addEventListener('click',ytChannelToPlaylist);
 
+    } else if (host == "www.biblegateway.com"){
+        myapi.addElem('p',{id:'hostheader',textContent:'~~~Host Specific~~~'},modal.querySelector('.modal-body'));
+        myapi.addElem('p',{id:'bibleGateRemVerse',textContent:'Remove Verse Numbers'},modal.querySelector('.modal-body')).addEventListener('click',bibleGateRemVerse);
+
     }
 
 
@@ -166,6 +170,40 @@ function hideModal(){
         modal.remove();
     });
 }
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+//
+//
+//
+//
+// functions below
+//
+//
+//
+//
+//
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+function bibleGateRemVerse(){
+    hideModal();
+
+    document.querySelectorAll('sup.versenum').forEach(x=>x.remove());
+    document.querySelectorAll('.footnotes').forEach(x=>x.remove());
+    var text = document.querySelector('.passage-text').innerText;
+    myapi.copyText(text);
+    myapi.createSnackbar("Copied verse");
+}
+
+
 
 function rmListYt(){
     hideModal();
