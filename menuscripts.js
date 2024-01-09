@@ -201,7 +201,7 @@ function bibleGateRemVerse(){
     document.querySelectorAll('.footnote').forEach(x=>x.remove());
     var text = document.querySelector('.passage-text').innerText;
     myapi.copyText(text);
-    myapi.createSnackbar("Copied verse");
+    myapi.createSnackbarFade("Copied verse");
 }
 
 
