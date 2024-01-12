@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2023.11.27.01
+// @version      2024.01.12.01
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -63,6 +63,22 @@
             // Select your fallback links using a unique class or ID
             let fallbackLinks = document.querySelectorAll('a:not(.editedByMe)');
             let shortsLinks = document.querySelectorAll('a[href*="youtube.com/shorts/"]');
+
+            console.log(fallbackLinks.length);
+            var comments = document.querySelectorAll('#comment:not(.editedByMe) a');
+            console.log(comments.length);
+            var newFall = [...fallbackLinks].filter(x=>{
+	            for (let i=0; i<comments.length; i++){
+		            if (x == comments[i]){
+			            return false;
+		            }
+	            }
+	            return true;
+            })
+            fallbackLinks = newFall;
+            comments.forEach(x=>{
+                x.classList.add('editedByMe');
+            });
 
             // Attach event listeners to the fallback links
             fallbackLinks.forEach(link => {
