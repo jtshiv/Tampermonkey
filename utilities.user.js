@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Utilities
+// @name         Utilities Beta
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2023.12.26.02
+// @version      2024.01.30.01
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -238,7 +238,7 @@
     // Set OpenDyslexic font
     let excepts = ['.wf-family-owa','.el','.fa','.fab','.fad','.fal','.far','.fas','.btn--icon, .btn--top, .header__button, .header__button--menu','.search__button','.ddgsi-horn'];
     let wilds = ['Icon','icon','material-symbols','google-symbols','-fa','lni-'];
-    let begins = [];
+    let begins = ['devsite-nav'];
     let host = window.location.host;
     // host specific
     if (host === "www.walmart.com" ){
