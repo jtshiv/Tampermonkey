@@ -1,9 +1,8 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2023.10.18.01
+// @version      2024.01.12.01
 // @description  Custom set of rules to block sites
-// @downloadURL  https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/blocker.user.js
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
 // @include      *
@@ -63,19 +62,47 @@
         var theinterval = setInterval(function(){
             // Select your fallback links using a unique class or ID
             let fallbackLinks = document.querySelectorAll('a:not(.editedByMe)');
+            let shortsLinks = document.querySelectorAll('a[href*="youtube.com/shorts/"]');
+
+            console.log(fallbackLinks.length);
+            var comments = document.querySelectorAll('#comment:not(.editedByMe) a');
+            console.log(comments.length);
+            var newFall = [...fallbackLinks].filter(x=>{
+	            for (let i=0; i<comments.length; i++){
+		            if (x == comments[i]){
+			            return false;
+		            }
+	            }
+	            return true;
+            })
+            fallbackLinks = newFall;
+            comments.forEach(x=>{
+                x.classList.add('editedByMe');
+            });
 
             // Attach event listeners to the fallback links
             fallbackLinks.forEach(link => {
                 link.classList.add('editedByMe');
+                // change click function to use href
                 link.addEventListener('click', function (event) {
                     event.stopImmediatePropagation();
                     event.preventDefault(); // Prevent the default link behavior
 
                     let href = link.href;
+                    // change shorts to normal videos
+                    href = href.replace("youtube.com/shorts/","youtube.com/watch?v=");
                     window.location.href = href;
 
                 });
             });
+
+            // remove the yt shorts url with normal watch
+            shortsLinks.forEach(link => {
+                let href = link.href;
+                // change shorts to normal videos
+                href = href.replace("youtube.com/shorts/","youtube.com/watch?v=");
+                link.href = href
+            })
 
         }, 500);
     };
