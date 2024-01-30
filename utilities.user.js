@@ -239,12 +239,16 @@
     let excepts = ['.wf-family-owa','.el','.fa','.fab','.fad','.fal','.far','.fas','.btn--icon, .btn--top, .header__button, .header__button--menu','.search__button','.ddgsi-horn'];
     let wilds = ['Icon','icon','material-symbols','google-symbols','-fa','lni-'];
     let begins = ['devsite-nav'];
+    let custom = []; // have inside with attribute and value pairs: custom = [["attribute","val of attribute"],[ect,val]]
     let host = window.location.host;
     // host specific
     if (host === "www.walmart.com" ){
         // add walmart's ld classes
         excepts.push('.ld');
         begins.push('.ld-');
+    } else if (host === "play.google.com" ){
+        // add playstore's logo to custom
+        custom.push(["aria-label","Google Play logo"]);
     }
 
     var surrounded = excepts.map(item => `:not(${item})`).join('');
@@ -252,6 +256,8 @@
     surrounded = surrounded + wildsmap;
     let beginsmap = begins.map(item => `:not([class^="${item}"])`).join('');
     surrounded = surrounded + beginsmap;
+    let custommap = custom.map(item => `:not(["${item[0]}"="${item[1]}"])`).join('');
+    surrounded = surrounded + custommap;
 
     let dyslexic = `@font-face {
 	font-family: 'mobiledyslexic-opendyslexic-regular';
