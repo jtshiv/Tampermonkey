@@ -202,6 +202,7 @@ function bibleGateRemVerse(){
     document.querySelectorAll('.full-chap-link').forEach(x=>x.remove());
     document.querySelectorAll('.passage-other-trans').forEach(x=>x.remove());
     document.querySelectorAll('.copyright-table').forEach(x=>x.remove());
+    document.querySelectorAll('.passage-scroller').forEach(x=>x.remove());
     var text = document.querySelector('.passage-box').innerText;
     myapi.copyText(text);
     myapi.createSnackbarFade("Copied verse");
