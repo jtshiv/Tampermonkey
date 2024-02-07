@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name          Youtube HD Mobile Beta
-// @version       2024.01.08.01
+// @version       2024.02.06.01
 // @downloadURL   https://raw.githubusercontent.com/jtshiv/Tampermonkey/myoutube/myoutube.user.js
 // @author        adisib - edit by me
 // @namespace     namespace_adisib
@@ -18,7 +18,7 @@
 
 	// Target Resolution to always set to. If not available, the next best resolution will be used.
 	const changeResolution = true;
-	const targetRes = "hd1440";
+	const targetRes = "hd720";
 	// Choices for targetRes are currently:
 	//   "highres" >= ( 8K / 4320p / QUHD  )
 	//   "hd2880"   = ( 5K / 2880p /  UHD+ )
@@ -51,7 +51,7 @@
 	// If flushBuffer is false, then the first second or so of the video may not always be the desired resolution.
 	//   If true, then the entire video will be guaranteed to be the target resolution, but there may be
 	//   a very small additional delay before the video starts if the buffer needs to be flushed.
-	const flushBuffer = false;
+	const flushBuffer = true;
 
 	// Setting cookies can allow some operations to perform faster or without a delay (e.g. theater mode)
 	// Some people don't like setting cookies, so this is false by default (which is the same as old behavior)
