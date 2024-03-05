@@ -210,6 +210,23 @@ function bibleGateRemVerse(getHtml=false){
         var text = "<h1>Day " + day + "</h1>\n" + document.querySelector('.passage-box').innerText;
         text = text.replaceAll("\n","<br>");
 
+         // Convert day to a 3-digit number with leading zeros for file
+        var paddedDay = day.toString().padStart(3, '0');
+        // Create a Blob containing the text
+        var blob = new Blob([text], { type: 'text/html' });
+        // Create a download link
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'day' + paddedDay + '.html';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+
+        // Trigger the download
+        a.click();
+
+        // Clean up
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
     } else{
         var text = document.querySelector('.passage-box').innerText;
     }
