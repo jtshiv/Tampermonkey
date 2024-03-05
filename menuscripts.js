@@ -141,6 +141,7 @@ function mainScript(){
     } else if (host == "www.biblegateway.com"){
         myapi.addElem('p',{id:'hostheader',textContent:'~~~Host Specific~~~'},modal.querySelector('.modal-body'));
         myapi.addElem('p',{id:'bibleGateRemVerse',textContent:'Remove Verse Numbers'},modal.querySelector('.modal-body')).addEventListener('click',bibleGateRemVerse);
+        myapi.addElem('p',{id:'bibleGateRemVerse',textContent:'Remove Verse Numbers - HTML'},modal.querySelector('.modal-body')).addEventListener('click',bibleGateRemVerse.bind(null,true));
 
     }
 
@@ -193,7 +194,7 @@ function hideModal(){
 
 
 
-function bibleGateRemVerse(){
+function bibleGateRemVerse(getHtml=false){
     hideModal();
 
     document.querySelectorAll('sup.versenum').forEach(x=>x.remove());
@@ -203,7 +204,16 @@ function bibleGateRemVerse(){
     document.querySelectorAll('.passage-other-trans').forEach(x=>x.remove());
     document.querySelectorAll('.copyright-table').forEach(x=>x.remove());
     document.querySelectorAll('.passage-scroller').forEach(x=>x.remove());
-    var text = document.querySelector('.passage-box').innerText;
+    if (getHtml == true){
+        var day = prompt("What day?");
+        if (day == undefined){return};
+        var text = "<h1>Day " + day + "</h1>\n" + document.querySelector('.passage-box').innerText;
+        text = text.replaceAll("\n","<br>");
+
+    } else{
+        var text = document.querySelector('.passage-box').innerText;
+    }
+    
     myapi.copyText(text);
     myapi.createSnackbarFade("Copied verse");
 }
