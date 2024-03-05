@@ -208,8 +208,8 @@ function bibleGateRemVerse(getHtml=false){
         var day = prompt("What day?");
         if (day == undefined){return};
         var text = "<h1>Day " + day + "</h1>\n" + document.querySelector('.passage-box').innerText;
-        text = text.replaceAll(/\s+/g, ' '); // to fix BG's weird spacing on poems
         text = text.replaceAll("\n","<br>");
+        text = text.replaceAll(/\s+/g, ' '); // to fix BG's weird spacing on poems
 
          // Convert day to a 3-digit number with leading zeros for file
         var paddedDay = day.toString().padStart(3, '0');
