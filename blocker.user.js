@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2024.01.12.01
+// @version      2024.03..01
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -40,6 +40,8 @@
             amazon();
         } else if (d === "stackoverflow.com"){
             stackexchange();
+        } else if (d === "www.duolingo.com" ){
+            duolingo();
         }
         // default will clear the interval if not on supported url
         else {
@@ -47,6 +49,15 @@
         }
     }
     
+    // Duolingo
+    function duolingo(){
+        // decline notification prompt
+        document.querySelectorAll("[data-focus-lock-disabled]").forEach(x=>{
+            x.querySelectorAll("button[data-test='notification-drawer-no-thanks-button']").forEach(y=>y.click());
+        });
+        
+    }
+
     // Youtube
     function youtube(){
         // pause overlay
