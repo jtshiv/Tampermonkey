@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Begleri Beta
 // @namespace    http://tampermonkey.net/
-// @version      2024.04.29.003
+// @version      2024.04.29.004
 // @match        https://begleritricks.com/progression-ladder
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=begleritricks.com
 // @grant        none
@@ -22,6 +22,9 @@
         }
         #rightside {
             display: none !important;
+        }
+        #toc {
+            padding-right: 0px !important;
         }`;
 
     // waits until myapi is loaded by utilities
