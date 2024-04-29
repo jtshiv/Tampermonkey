@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Begleri Beta
 // @namespace    http://tampermonkey.net/
-// @version      2024.04.29.002
+// @version      2024.04.29.003
 // @match        https://begleritricks.com/progression-ladder
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=begleritricks.com
 // @grant        none
@@ -37,7 +37,19 @@
     apiPromise.then(()=>{
         //console.log("api exists")
         myapi.addStyle(begleriStyle);
+        // show snackbar for toggling toc
+        myapi.createSnackbarFn1('Toggle TOC',toggleToc);
     });
 
+    // shows or hides table of contents
+    function toggleToc(){
+        let tocstate = document.querySelector('#toc').style.display;
+        if(tocstate == "none"){
+            document.querySelector('#toc').style.display = "";
+        } else{
+            document.querySelector('#toc').style.display = "none";
+        }
+    }
 
+    
 })();
