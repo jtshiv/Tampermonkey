@@ -5,7 +5,7 @@
 // @match        https://begleritricks.com/progression-ladder
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=begleritricks.com
 // @grant        none
-// @run-at       document-start
+// @run-at       document-idle
 // @noframes
 // ==/UserScript==
 
