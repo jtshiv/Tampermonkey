@@ -39,6 +39,8 @@
         myapi.addStyle(begleriStyle);
         // show snackbar for toggling toc
         myapi.createSnackbarFn1('Toggle TOC',toggleToc);
+        // close toc by default
+        toggleToc();
     });
 
     // shows or hides table of contents
