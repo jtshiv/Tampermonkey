@@ -157,6 +157,7 @@ function mainScript(){
         myapi.addElem('p',{id:'hrefheader',textContent:'~~~Page Specific~~~'},modal.querySelector('.modal-body'));
         myapi.addElem('p',{id:'osrsOptimalQuestGuide',textContent:'Check boxes based on completed quests'},modal.querySelector('.modal-body')).addEventListener('click',osrsOptimalQuestGuide);
         myapi.addElem('p',{id:'osrsOqgToggle',textContent:'Toggle visibility of completed quests'},modal.querySelector('.modal-body')).addEventListener('click',osrsOqgToggleCompleted);
+        myapi.addElem('p',{id:'osrsFirstIncomplete',textContent:'Scroll to first incomplete quest'},modal.querySelector('.modal-body')).addEventListener('click',osrsFirstIncomplete);
 
     }
 
@@ -327,6 +328,15 @@ function playbackSpeed(){
         };
     };
 };
+
+
+function osrsFirstIncomplete(){
+    hideModal();
+    // it finds and scrolls to the first red X for an incomplete quest
+    document.querySelectorAll('img.qc-not-started')[0].scrollIntoView( {
+        block: "center", inline: "nearest", behavior:"smooth"
+    });
+}
 
 function osrsToc() {
     hideModal();
