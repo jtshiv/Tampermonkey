@@ -337,39 +337,113 @@ function osrsToc() {
 
     /* Select the table of contents element */
     var tocElement = document.querySelector('#toc');
+    document.querySelectorAll('#tocclone').forEach(x=>x.remove());
+    var tocClone = tocElement.cloneNode(true);
+    tocClone.id = 'tocclone';
+    // tocClone.classList.add('toc-hide');
+    tocElement.parentElement.insertBefore(tocClone,tocElement);
+    var r = document.querySelector(':root');
+    function getRect(){
+        let rect = tocElement.getBoundingClientRect();
+        r.style.setProperty('--tocTop',rect.top + "px");
+        r.style.setProperty('--tocLeft',rect.left + "px");
+        r.style.setProperty('--tocWidth',rect.width + "px");
+        r.style.setProperty('--tocHeight',rect.height + "px");
+    }
+    getRect();
 
     /* Get the initial offset position of the table of contents */
     var tocOffset = tocElement.offsetTop;
+    var tocOffsetLeft = tocElement.offsetLeft;
 
     /* Create a new <style> element for the floating-toc CSS */
+    document.querySelectorAll('#floating-toc-style').forEach(x=>x.remove());
     var styleElement = document.createElement('style');
     styleElement.id = 'floating-toc-style';
     styleElement.innerHTML = `
         /* CSS for the floating-toc */
         .floating-toc {
-        position: fixed;
-        top: 0;
-        z-index: 9999;
+        position: fixed !important;
+        top: var(--tocTop) !important;
+        left: var(--tocLeft) !important;
+        z-index: 9999 !important;
         }
+        .toc {
+        margin-top: 1em;
+        padding: 0;
+        }
+        .toc-hide {
+            display: none !important;
+        }
+        /* without this the sidebar stays on top of toc */
+        .vector-body {
+            z-index: auto !important;
+        }
+        #tocclone{
+            position: fixed !important;
+            z-index: 9999 !important;
+        }
+        .toc-move-forwards{
+            animation: slideRect 1s forwards;
+        }
+        .toc-move-backwards{
+            animation: slideRectBack 1s forwards;
+        }
+        @keyframes slideRect {
+            from {
+                top: var(--tocTop);
+                left: var(--tocLeft);
+                width: var(--tocWidth);
+            }
+            to {
+                top: 0px;
+                left: 0px;
+                width: 13em;
+            }
+        }
+        @keyframes slideRectBack {
+            from {
+                top: 0px;
+                left: 0px;
+                width: 13em;
+                opacity: 100%;
+            }
+            to {
+                top: var(--tocTop);
+                left: var(--tocLeft);
+                width: var(--tocWidth);
+                opacity: 0;
+            }
+        }
+        
     `;
 
     /* Inject the <style> element into the <head> of the document */
     document.head.appendChild(styleElement);
-
-    /* Add a scroll event listener */
-    window.addEventListener('scroll', function() {
+    
+    function scrollListener() {
         /* Calculate the current scroll position */
         var scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
 
         /* Check if the scroll position has passed the table of contents */
         if (scrollPosition >= tocOffset) {
-        /* Add a CSS class to make the table of contents float */
-        tocElement.classList.add('floating-toc');
+            /* Add a CSS class to make the table of contents float */
+            getRect();
+            tocClone.classList.remove('toc-move-backwards');
+            tocClone.classList.add('toc-move-forwards');
+            getRect();
         } else {
-        /* Remove the CSS class if the scroll position is above the table of contents */
-        tocElement.classList.remove('floating-toc');
+            /* Remove the CSS class if the scroll position is above the table of contents */
+            getRect();
+            tocClone.classList.remove('toc-move-forwards');
+            tocClone.classList.add('toc-move-backwards');
+            getRect();
         }
-    });
+    }
+
+    /* Add a scroll event listener */
+    window.addEventListener('scroll', scrollListener);
+    scrollListener();
 };
 
 /**
