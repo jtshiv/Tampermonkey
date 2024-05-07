@@ -333,7 +333,7 @@ function playbackSpeed(){
 function osrsFirstIncomplete(){
     hideModal();
     // it finds and scrolls to the first red X for an incomplete quest
-    document.querySelectorAll('img.qc-not-started')[0].scrollIntoView( {
+    document.querySelectorAll('tr:not([class="highlight-on"]) img.qc-not-started')[0].scrollIntoView( {
         block: "center", inline: "nearest", behavior:"smooth"
     });
 }
