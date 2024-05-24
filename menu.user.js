@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Menu Beta
+// @name         Menu
 // @version      2023.12.11.02
 // @description  Show menu of scripts
 // @author       You
