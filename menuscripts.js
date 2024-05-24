@@ -425,6 +425,10 @@ function osrsToc() {
                 opacity: 0;
             }
         }
+        #tocclone ul {
+            max-height: 90vh !important;
+            overflow: scroll;
+        }
         
     `;
 
