@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Utilities
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2024.05.30.01
+// @version      2024.06.25.01
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -306,8 +306,10 @@
         if (elem.id !== 'dyslexicstyle'){return};
         let d = document.domain;
         if (d === "www.youtube.com" || d === "m.youtube.com" || d === "melvoridle.com" || d === "app.ynab.com"){
-        elem.disabled = true;
-}
+            elem.disabled = true;
+        } else if (document.location.host === "docs.google.com" ) {
+            elem.disabled = true;
+        } 
     };
 
 
