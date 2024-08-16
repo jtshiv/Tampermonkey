@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2024.08.16.001
+// @version      2024.08.16.002
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -67,9 +67,11 @@
     }
 
     // Youtube
+    var yt_watch_ran = false;
     function youtube(){
         // if on video (has watch in url) show snack for 2x speed
-        if (document.location.href.indexOf("watch") != -1) {
+        if (document.location.href.indexOf("watch") != -1 && yt_watch_ran == false) {
+            yt_watch_ran = true;
             // make sure myapi is loaded
             getmyapi();
             let speed_controller = new function () {
