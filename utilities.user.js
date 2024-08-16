@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Utilities Beta
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2024.08.16.001
+// @version      2024.08.16.002
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -22,71 +22,75 @@
     console.log("Utilities script has started");
 
     // object with the utilities scripts in them
-    const myapi = {
-        /**
-         * Description
-         * @param {object} details js object such as { method: 'GET', url: 'https://blah', onload:function(response){} }
-         * @returns {any}
-         */
-        async httpReq(details){
-            return await ((typeof GM_xmlhttpRequest === "function") ? GM_xmlhttpRequest : console.log("Error: GM_xmlhttpRequest"))(details);
-        },
-        /**
-         * Add element to page.
-         * @param {string} tag type of element to add
-         * @param {object} attributes js object such as { textContent: this is the innerHTML } or { src: 'http://blah.js', type: 'text/javascript' }
-         * @param {element} parent optional element to append to
-         * @returns {element} created element
-         */
-        addElem(tag,attributes,parent = false){
-            let elem;
-            if (parent === false){
-                elem = GM_addElement(tag,attributes);
-            } else {
-                elem = GM_addElement(parent,tag,attributes);
-            };
-            return elem;
-        },
-        /**
-         * Description
-         * @param {innerHTML} s the css
-         * @returns {element} the added element
-         */
-        addStyle(s){
-            return this.addElem("style",{textContent: s})
-        },
-        snackbar: snackbar_class,
-        createSnackbar(message){
-            return createSnackbar(message);
-        },
-        createSnackbarFade(message){
-            return createSnackbarFade(message);
-        },
-        createSnackbarFn1(message,callback){
-            return createSnackbarFn1(message,callback);
-        },
-        toggleDyslexic(){
-            return toggleDyslexic();
-        },
-        async getValue(name, defaultVal){
-            return await (GM_getValue)(name, defaultVal)
-        },
-        async setValue(name, defaultVal){
-            return await (GM_setValue)(name, value)
-        },
-        async deleteValue(name){
-            return await (GM_deleteValue)(name)
-        },
-        message(text,disappearTime = 5000){
+    // const myapi = 
+    // Define a function to initialize the API object
+    function initialize_myapi() {
+        return {
+            /**
+             * Description
+             * @param {object} details js object such as { method: 'GET', url: 'https://blah', onload:function(response){} }
+             * @returns {any}
+             */
+            async httpReq(details){
+                return await ((typeof GM_xmlhttpRequest === "function") ? GM_xmlhttpRequest : console.log("Error: GM_xmlhttpRequest"))(details);
+            },
+            /**
+             * Add element to page.
+             * @param {string} tag type of element to add
+             * @param {object} attributes js object such as { textContent: this is the innerHTML } or { src: 'http://blah.js', type: 'text/javascript' }
+             * @param {element} parent optional element to append to
+             * @returns {element} created element
+             */
+            addElem(tag,attributes,parent = false){
+                let elem;
+                if (parent === false){
+                    elem = GM_addElement(tag,attributes);
+                } else {
+                    elem = GM_addElement(parent,tag,attributes);
+                };
+                return elem;
+            },
+            /**
+             * Description
+             * @param {innerHTML} s the css
+             * @returns {element} the added element
+             */
+            addStyle(s){
+                return this.addElem("style",{textContent: s})
+            },
+            snackbar: snackbar_class,
+            createSnackbar(message){
+                return createSnackbar(message);
+            },
+            createSnackbarFade(message){
+                return createSnackbarFade(message);
+            },
+            createSnackbarFn1(message,callback){
+                return createSnackbarFn1(message,callback);
+            },
+            toggleDyslexic(){
+                return toggleDyslexic();
+            },
+            async getValue(name, defaultVal){
+                return await (GM_getValue)(name, defaultVal)
+            },
+            async setValue(name, defaultVal){
+                return await (GM_setValue)(name, value)
+            },
+            async deleteValue(name){
+                return await (GM_deleteValue)(name)
+            },
+            message(text,disappearTime = 5000){
 
-        },
-        async copyText(text){
-            await (GM_setClipboard)(text);
-            console.log("clipboard set: " + text);
-            return text;
-        }
+            },
+            async copyText(text){
+                await (GM_setClipboard)(text);
+                console.log("clipboard set: " + text);
+                return text;
+            }
+        };
     };
-    unsafeWindow.myapi = myapi;
+    
 
 
 
@@ -437,5 +441,12 @@
             console.log('Disabled OpenDyslexic');
         }
     }
+
+
+
+
+    const myapi = initialize_myapi();
+    unsafeWindow.myapi = myapi;
+
 })();
 
