@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Utilities Beta
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2024.06.25.01
+// @version      2024.08.16.001
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -55,6 +55,7 @@
         addStyle(s){
             return this.addElem("style",{textContent: s})
         },
+        snackbar: snackbar_class,
         createSnackbar(message){
             return createSnackbar(message);
         },
@@ -141,6 +142,112 @@
     unsafeWindow.createSnackbar = createSnackbar;
     unsafeWindow.createSnackbarFade = createSnackbarFade;
     unsafeWindow.createSnackbarFn1 = createSnackbarFn1;
+
+    
+    class snackbar_class{
+        constructor(text,fade = false,callback = null) {
+            this.#text = text
+            this.#fade = Boolean(fade)
+            if(callback){this.#callback = callback}
+            this.snackbar = null
+            this.#initElems()
+        }
+        #text
+        #fade
+        #callback
+        #style
+        show(){
+            this.#testSnack()
+            this.snackbar.classList.add('show');
+        }
+        hide(){
+            this.snackbar.classList.remove('show');
+        }
+        close(){
+            this.#testSnack()
+            this.snackbar.style.opacity = '0';
+        }
+        setText(text){
+            this.#text = text
+            this.#testSnack()
+            this.snackbar.querySelector('.text').innerText = this.#text;
+        }
+
+        // private internal functions start with #
+
+        /**
+         * test if snackbar is set
+         */
+        #testSnack(){
+            if(this.snackbar == null){this.#initElems()}
+        }
+        #killSnack(){
+            this.snackbar.remove();
+            this.snackbar = null;
+            this.#style.remove();
+        }
+        #initElems(){
+            let time = Date.now();
+
+            this.#style = document.createElement('style');
+            this.#style.id = "snackbarstyle" + time;
+            this.#style.innerHTML = this.#styleMain;
+            document.head.appendChild(this.#style);
+
+            this.snackbar = document.createElement('div');
+            this.snackbar.id = "snackbar" + time;
+            this.snackbar.classList.add('snackbar');
+            
+            // this.snackbar.innerText = this.#text;
+            this.snackbar.innerHTML=`
+                <span class="fn1"><span class="text">`+this.#text+`</span></span>
+                <span class="close">&times;</span>
+            `;
+            this.snackbar.querySelector('.close').addEventListener('click',x=>{
+                this.snackbar.style.opacity=0;
+            });
+
+            // callback if given
+            if (this.#callback){
+                this.snackbar.querySelector('.fn1').addEventListener('click',this.#callback);
+            }
+
+            // fade if given
+            if (this.#fade){
+                setTimeout(function(){
+                    this.snackbar.style.opacity = '0';
+                },5000);
+            }
+
+            this.snackbar.style.zIndex = this.#getMaxZIndex() + 1;
+
+            // when opacity set and it finishes fading, kill elem
+            this.snackbar.addEventListener('transitionend', this.#killSnack.bind(this));
+
+            document.body.appendChild(this.snackbar);
+            
+        }
+        #getMaxZIndex() {
+            try{
+                return Math.max(
+                    ...Array.from(document.querySelectorAll('body *'), el =>
+                        parseFloat(window.getComputedStyle(el).zIndex),
+                    ).filter(zIndex => !Number.isNaN(zIndex)),
+                    0,
+                );
+            }catch(e){
+                return Math.max(
+                    ...Array.from(document.querySelectorAll('body *'), el =>
+                        parseFloat(unsafeWindow.getComputedStyle(el).zIndex),
+                    ).filter(zIndex => !Number.isNaN(zIndex)),
+                    0,
+                );
+            }
+
+        }
+        #styleMain = styleMain;
+    }
+
 
     function getMaxZIndex() {
         return Math.max(
