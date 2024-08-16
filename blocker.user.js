@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2024.08.16.002
+// @version      2024.08.16.003
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -99,6 +99,17 @@
                 // this has to be below the toggleSpeed declaration as it won't hoist
                 this.snackbar = new myapi.snackbar(this.val_speed + "x speed",0,this.toggleSpeed.bind(this))
                 this.snackbar.show()
+            
+                // Add an event listener for the fullscreenchange event
+                document.addEventListener('fullscreenchange', function(event) {
+                    // Check if the element is currently in fullscreen mode
+                    if (!document.fullscreenElement) {
+                        this.snackbar.show();
+                    } else {
+                        this.snackbar.hide();
+                    }
+                }.bind(this));
+
                 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 // The below function is private
                 // with it being let, it's only visible to this object
