@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Blocker
+// @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2024.03..01
+// @version      2024.08.16.001
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -11,11 +11,19 @@
 // @run-at       document-start
 // ==/UserScript==
 
-(function() {
+(async function() {
     'use strict';
 
     // Your code here...
     console.log("Blocker script has started");
+
+    // waits until myapi is loaded by utilities
+    async function getmyapi(){
+        while (typeof myapi !== 'object') {
+            await new Promise(r => setTimeout(r, 100))
+        };
+        return myapi
+    }
 
     // interval that loads fn based on domain
     var startInt = setInterval(starter,500);
@@ -60,6 +68,48 @@
 
     // Youtube
     function youtube(){
+        // if on video (has watch in url) show snack for 2x speed
+        if (document.location.href.indexOf("watch") != -1) {
+            // make sure myapi is loaded
+            getmyapi();
+            let speed_controller = new function () {
+                this.speed_bool = false; // false for 1x, true for 2x
+                this.val_speed = 2
+                this.val_nospeed = 1
+                
+                this.toggleSpeed = function(){
+                    // toggle speed bool
+                    this.speed_bool = !this.speed_bool;
+                    // speed
+                    if (this.speed_bool){
+                        this.snackbar.hide()
+                        speedSet(this.val_speed)
+                        this.snackbar.setText(this.val_nospeed + "x speed")
+                        this.snackbar.show()
+                    } else{
+                        this.snackbar.hide()
+                        speedSet(this.val_nospeed)
+                        this.snackbar.setText(this.val_speed + "x speed")
+                        this.snackbar.show()
+                    }
+                    // set snackbar
+                }
+                // this has to be below the toggleSpeed declaration as it won't hoist
+                this.snackbar = new myapi.snackbar(this.val_speed + "x speed",0,this.toggleSpeed.bind(this))
+                this.snackbar.show()
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                // The below function is private
+                // with it being let, it's only visible to this object
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                let speedSet = function(value){
+                    document.querySelectorAll('video').forEach(x => {
+                        x.playbackRate=parseFloat(value);
+                    })
+                }
+            }
+            console.log("speed_controller initialized")
+        }
+
         // pause overlay
         document.querySelectorAll('.ytp-pause-overlay-container').forEach(x=>x.remove());
         document.querySelectorAll('a[href]').forEach(x=>{
@@ -75,9 +125,9 @@
             let fallbackLinks = document.querySelectorAll('a:not(.editedByMe)');
             let shortsLinks = document.querySelectorAll('a[href*="youtube.com/shorts/"]');
 
-            console.log(fallbackLinks.length);
+            // console.log(fallbackLinks.length);
             var comments = document.querySelectorAll('#comment:not(.editedByMe) a');
-            console.log(comments.length);
+            // console.log(comments.length);
             var newFall = [...fallbackLinks].filter(x=>{
 	            for (let i=0; i<comments.length; i++){
 		            if (x == comments[i]){
