@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Utilities Beta
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2024.08.16.002
+// @version      2024.09.16.001
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -120,7 +120,7 @@
             padding: 16px; /* Padding */ position: fixed; /* Sit on top of the screen */
             z-index: 1; /* Add a z-index if needed */
             left: 50%; /* Center the snackbar */
-            bottom: 30px; /* 30px from the bottom */
+            bottom: 90px; /* 30px from the bottom */
         }
         /* Show the snackbar when clicking on a button (class added with JavaScript) */
         .snackbar.show {
