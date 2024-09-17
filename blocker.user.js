@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2024.01.12.01
+// @version      2024.09.17.001
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -11,11 +11,19 @@
 // @run-at       document-start
 // ==/UserScript==
 
-(function() {
+(async function() {
     'use strict';
 
     // Your code here...
     console.log("Blocker script has started");
+
+    // waits until myapi is loaded by utilities
+    async function getmyapi(){
+        while (typeof myapi !== 'object') {
+            await new Promise(r => setTimeout(r, 100))
+        };
+        return myapi
+    }
 
     // interval that loads fn based on domain
     var startInt = setInterval(starter,500);
@@ -40,6 +48,8 @@
             amazon();
         } else if (d === "stackoverflow.com"){
             stackexchange();
+        } else if (d === "www.duolingo.com" ){
+            duolingo();
         }
         // default will clear the interval if not on supported url
         else {
@@ -47,8 +57,72 @@
         }
     }
     
+    // Duolingo
+    function duolingo(){
+        // decline notification prompt
+        document.querySelectorAll("[data-focus-lock-disabled]").forEach(x=>{
+            x.querySelectorAll("button[data-test='notification-drawer-no-thanks-button']").forEach(y=>y.click());
+        });
+        
+    }
+
     // Youtube
+    var yt_watch_ran = false;
     function youtube(){
+        // if on video (has watch in url) show snack for 2x speed
+        if (document.location.href.indexOf("watch") != -1 && yt_watch_ran == false) {
+            yt_watch_ran = true;
+            // make sure myapi is loaded
+            getmyapi();
+            let speed_controller = new function () {
+                this.speed_bool = false; // false for 1x, true for 2x
+                this.val_speed = 2
+                this.val_nospeed = 1
+                
+                this.toggleSpeed = function(){
+                    // toggle speed bool
+                    this.speed_bool = !this.speed_bool;
+                    // speed
+                    if (this.speed_bool){
+                        this.snackbar.hide()
+                        speedSet(this.val_speed)
+                        this.snackbar.setText(this.val_speed + "x speed")
+                        this.snackbar.show()
+                    } else{
+                        this.snackbar.hide()
+                        speedSet(this.val_nospeed)
+                        this.snackbar.setText(this.val_nospeed + "x speed")
+                        this.snackbar.show()
+                    }
+                    // set snackbar
+                }
+                // this has to be below the toggleSpeed declaration as it won't hoist
+                this.snackbar = new myapi.snackbar(this.val_nospeed + "x speed",0,this.toggleSpeed.bind(this))
+                this.snackbar.show()
+            
+                // Add an event listener for the fullscreenchange event
+                document.addEventListener('fullscreenchange', function(event) {
+                    // Check if the element is currently in fullscreen mode
+                    if (!document.fullscreenElement) {
+                        this.snackbar.show();
+                    } else {
+                        this.snackbar.hide();
+                    }
+                }.bind(this));
+
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                // The below function is private
+                // with it being let, it's only visible to this object
+                // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                let speedSet = function(value){
+                    document.querySelectorAll('video').forEach(x => {
+                        x.playbackRate=parseFloat(value);
+                    })
+                }
+            }
+            console.log("speed_controller initialized")
+        }
+
         // pause overlay
         document.querySelectorAll('.ytp-pause-overlay-container').forEach(x=>x.remove());
         document.querySelectorAll('a[href]').forEach(x=>{
@@ -64,9 +138,9 @@
             let fallbackLinks = document.querySelectorAll('a:not(.editedByMe)');
             let shortsLinks = document.querySelectorAll('a[href*="youtube.com/shorts/"]');
 
-            console.log(fallbackLinks.length);
+            // console.log(fallbackLinks.length);
             var comments = document.querySelectorAll('#comment:not(.editedByMe) a');
-            console.log(comments.length);
+            // console.log(comments.length);
             var newFall = [...fallbackLinks].filter(x=>{
 	            for (let i=0; i<comments.length; i++){
 		            if (x == comments[i]){
