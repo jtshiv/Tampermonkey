@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2024.08.16.003
+// @version      2024.09.17.001
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -86,18 +86,18 @@
                     if (this.speed_bool){
                         this.snackbar.hide()
                         speedSet(this.val_speed)
-                        this.snackbar.setText(this.val_nospeed + "x speed")
+                        this.snackbar.setText(this.val_speed + "x speed")
                         this.snackbar.show()
                     } else{
                         this.snackbar.hide()
                         speedSet(this.val_nospeed)
-                        this.snackbar.setText(this.val_speed + "x speed")
+                        this.snackbar.setText(this.val_nospeed + "x speed")
                         this.snackbar.show()
                     }
                     // set snackbar
                 }
                 // this has to be below the toggleSpeed declaration as it won't hoist
-                this.snackbar = new myapi.snackbar(this.val_speed + "x speed",0,this.toggleSpeed.bind(this))
+                this.snackbar = new myapi.snackbar(this.val_nospeed + "x speed",0,this.toggleSpeed.bind(this))
                 this.snackbar.show()
             
                 // Add an event listener for the fullscreenchange event
