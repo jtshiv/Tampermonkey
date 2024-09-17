@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Utilities
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2024.06.25.01
+// @version      2024.09.16.001
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -22,70 +22,75 @@
     console.log("Utilities script has started");
 
     // object with the utilities scripts in them
-    const myapi = {
-        /**
-         * Description
-         * @param {object} details js object such as { method: 'GET', url: 'https://blah', onload:function(response){} }
-         * @returns {any}
-         */
-        async httpReq(details){
-            return await ((typeof GM_xmlhttpRequest === "function") ? GM_xmlhttpRequest : console.log("Error: GM_xmlhttpRequest"))(details);
-        },
-        /**
-         * Add element to page.
-         * @param {string} tag type of element to add
-         * @param {object} attributes js object such as { textContent: this is the innerHTML } or { src: 'http://blah.js', type: 'text/javascript' }
-         * @param {element} parent optional element to append to
-         * @returns {element} created element
-         */
-        addElem(tag,attributes,parent = false){
-            let elem;
-            if (parent === false){
-                elem = GM_addElement(tag,attributes);
-            } else {
-                elem = GM_addElement(parent,tag,attributes);
-            };
-            return elem;
-        },
-        /**
-         * Description
-         * @param {innerHTML} s the css
-         * @returns {element} the added element
-         */
-        addStyle(s){
-            return this.addElem("style",{textContent: s})
-        },
-        createSnackbar(message){
-            return createSnackbar(message);
-        },
-        createSnackbarFade(message){
-            return createSnackbarFade(message);
-        },
-        createSnackbarFn1(message,callback){
-            return createSnackbarFn1(message,callback);
-        },
-        toggleDyslexic(){
-            return toggleDyslexic();
-        },
-        async getValue(name, defaultVal){
-            return await (GM_getValue)(name, defaultVal)
-        },
-        async setValue(name, defaultVal){
-            return await (GM_setValue)(name, value)
-        },
-        async deleteValue(name){
-            return await (GM_deleteValue)(name)
-        },
-        message(text,disappearTime = 5000){
+    // const myapi = 
+    // Define a function to initialize the API object
+    function initialize_myapi() {
+        return {
+            /**
+             * Description
+             * @param {object} details js object such as { method: 'GET', url: 'https://blah', onload:function(response){} }
+             * @returns {any}
+             */
+            async httpReq(details){
+                return await ((typeof GM_xmlhttpRequest === "function") ? GM_xmlhttpRequest : console.log("Error: GM_xmlhttpRequest"))(details);
+            },
+            /**
+             * Add element to page.
+             * @param {string} tag type of element to add
+             * @param {object} attributes js object such as { textContent: this is the innerHTML } or { src: 'http://blah.js', type: 'text/javascript' }
+             * @param {element} parent optional element to append to
+             * @returns {element} created element
+             */
+            addElem(tag,attributes,parent = false){
+                let elem;
+                if (parent === false){
+                    elem = GM_addElement(tag,attributes);
+                } else {
+                    elem = GM_addElement(parent,tag,attributes);
+                };
+                return elem;
+            },
+            /**
+             * Description
+             * @param {innerHTML} s the css
+             * @returns {element} the added element
+             */
+            addStyle(s){
+                return this.addElem("style",{textContent: s})
+            },
+            snackbar: snackbar_class,
+            createSnackbar(message){
+                return createSnackbar(message);
+            },
+            createSnackbarFade(message){
+                return createSnackbarFade(message);
+            },
+            createSnackbarFn1(message,callback){
+                return createSnackbarFn1(message,callback);
+            },
+            toggleDyslexic(){
+                return toggleDyslexic();
+            },
+            async getValue(name, defaultVal){
+                return await (GM_getValue)(name, defaultVal)
+            },
+            async setValue(name, defaultVal){
+                return await (GM_setValue)(name, value)
+            },
+            async deleteValue(name){
+                return await (GM_deleteValue)(name)
+            },
+            message(text,disappearTime = 5000){
 
-        },
-        async copyText(text){
-            await (GM_setClipboard)(text);
-            console.log("clipboard set: " + text);
-            return text;
-        }
+            },
+            async copyText(text){
+                await (GM_setClipboard)(text);
+                console.log("clipboard set: " + text);
+                return text;
+            }
+        };
     };
-    unsafeWindow.myapi = myapi;
+    
 
 
 
@@ -115,7 +120,7 @@
             padding: 16px; /* Padding */ position: fixed; /* Sit on top of the screen */
             z-index: 1; /* Add a z-index if needed */
             left: 50%; /* Center the snackbar */
-            bottom: 30px; /* 30px from the bottom */
+            bottom: 90px; /* 30px from the bottom */
         }
         /* Show the snackbar when clicking on a button (class added with JavaScript) */
         .snackbar.show {
@@ -141,6 +146,112 @@
     unsafeWindow.createSnackbar = createSnackbar;
     unsafeWindow.createSnackbarFade = createSnackbarFade;
     unsafeWindow.createSnackbarFn1 = createSnackbarFn1;
+
+    
+    class snackbar_class{
+        constructor(text,fade = false,callback = null) {
+            this.#text = text
+            this.#fade = Boolean(fade)
+            if(callback){this.#callback = callback}
+            this.snackbar = null
+            this.#initElems()
+        }
+        #text
+        #fade
+        #callback
+        #style
+        show(){
+            this.#testSnack()
+            this.snackbar.classList.add('show');
+        }
+        hide(){
+            this.snackbar.classList.remove('show');
+        }
+        close(){
+            this.#testSnack()
+            this.snackbar.style.opacity = '0';
+        }
+        setText(text){
+            this.#text = text
+            this.#testSnack()
+            this.snackbar.querySelector('.text').innerText = this.#text;
+        }
+
+        // private internal functions start with #
+
+        /**
+         * test if snackbar is set
+         */
+        #testSnack(){
+            if(this.snackbar == null){this.#initElems()}
+        }
+        #killSnack(){
+            this.snackbar.remove();
+            this.snackbar = null;
+            this.#style.remove();
+        }
+        #initElems(){
+            let time = Date.now();
+
+            this.#style = document.createElement('style');
+            this.#style.id = "snackbarstyle" + time;
+            this.#style.innerHTML = this.#styleMain;
+            document.head.appendChild(this.#style);
+
+            this.snackbar = document.createElement('div');
+            this.snackbar.id = "snackbar" + time;
+            this.snackbar.classList.add('snackbar');
+            
+            // this.snackbar.innerText = this.#text;
+            this.snackbar.innerHTML=`
+                <span class="fn1"><span class="text">`+this.#text+`</span></span>
+                <span class="close">&times;</span>
+            `;
+            this.snackbar.querySelector('.close').addEventListener('click',x=>{
+                this.snackbar.style.opacity=0;
+            });
+
+            // callback if given
+            if (this.#callback){
+                this.snackbar.querySelector('.fn1').addEventListener('click',this.#callback);
+            }
+
+            // fade if given
+            if (this.#fade){
+                setTimeout(function(){
+                    this.snackbar.style.opacity = '0';
+                },5000);
+            }
+
+            this.snackbar.style.zIndex = this.#getMaxZIndex() + 1;
+
+            // when opacity set and it finishes fading, kill elem
+            this.snackbar.addEventListener('transitionend', this.#killSnack.bind(this));
+
+            document.body.appendChild(this.snackbar);
+            
+        }
+        #getMaxZIndex() {
+            try{
+                return Math.max(
+                    ...Array.from(document.querySelectorAll('body *'), el =>
+                        parseFloat(window.getComputedStyle(el).zIndex),
+                    ).filter(zIndex => !Number.isNaN(zIndex)),
+                    0,
+                );
+            }catch(e){
+                return Math.max(
+                    ...Array.from(document.querySelectorAll('body *'), el =>
+                        parseFloat(unsafeWindow.getComputedStyle(el).zIndex),
+                    ).filter(zIndex => !Number.isNaN(zIndex)),
+                    0,
+                );
+            }
+
+        }
+        #styleMain = styleMain;
+    }
+
 
     function getMaxZIndex() {
         return Math.max(
@@ -330,5 +441,12 @@
             console.log('Disabled OpenDyslexic');
         }
     }
+
+
+
+
+    const myapi = initialize_myapi();
+    unsafeWindow.myapi = myapi;
+
 })();
 
