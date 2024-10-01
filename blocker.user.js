@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2024.09.17.001
+// @version      2024.10.01.001
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -105,6 +105,16 @@
                     return this.player.getPlaybackRate() != 1
                 }
 
+                // yt natively has an iframe api for playback rate change. this attaches to that and updates the snackbar text for the current speed
+                this.player.addEventListener('onPlaybackRateChange', function(event) {
+                    // if new speed isn't 1x, have next toggle change back to 1x
+                    this.speed_bool = this.getSpeedModified()
+                    this.snackbar.setText(event + "x speed")
+                    this.snackbar.show()
+                    console.log('Playback rate changed to:', event); // returns the int value of the speed
+                }.bind(this));
+                console.log("Playback listener attached")
+                
                 // this has to be below the toggleSpeed declaration as it won't hoist
                 this.snackbar = new myapi.snackbar(this.player.getPlaybackRate() + "x speed",0,this.toggleSpeed.bind(this))
                 this.snackbar.show()
