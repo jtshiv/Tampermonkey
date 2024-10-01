@@ -98,6 +98,11 @@
                     }
                     // set snackbar
                 }
+
+                this.getSpeedModified = function(){
+                    return this.player.getPlaybackRate() != 1
+                }
+
                 // this has to be below the toggleSpeed declaration as it won't hoist
                 this.snackbar = new myapi.snackbar(this.player.getPlaybackRate() + "x speed",0,this.toggleSpeed.bind(this))
                 this.snackbar.show()
