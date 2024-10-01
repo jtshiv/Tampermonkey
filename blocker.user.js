@@ -82,6 +82,8 @@
                 this.player = document.getElementById("movie_player") || document.getElementsByClassName("html5-video-player")[0]
                 
                 this.toggleSpeed = function(){
+                    // if new speed isn't 1x, have next toggle change back to 1x
+                    this.speed_bool = this.getSpeedModified()
                     // toggle speed bool
                     this.speed_bool = !this.speed_bool;
                     // speed
