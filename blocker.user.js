@@ -115,11 +115,13 @@
                 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 // The below function is private
                 // with it being let, it's only visible to this object
+                // remember to bind this to it if using this
                 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 let speedSet = function(value){
-                    let ytPlayer = document.getElementById("movie_player") || document.getElementsByClassName("html5-video-player")[0];
-                    ytPlayer.setPlaybackRate(parseFloat(value))
-                }
+                    this.player.setPlaybackRate(parseFloat(value))
+                    this.snackbar.show();
+                }.bind(this)
+                
             }
             console.log("speed_controller initialized")
         }
