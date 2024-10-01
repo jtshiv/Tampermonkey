@@ -117,9 +117,8 @@
                 // with it being let, it's only visible to this object
                 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 let speedSet = function(value){
-                    document.querySelectorAll('video').forEach(x => {
-                        x.playbackRate=parseFloat(value);
-                    })
+                    let ytPlayer = document.getElementById("movie_player") || document.getElementsByClassName("html5-video-player")[0];
+                    ytPlayer.setPlaybackRate(parseFloat(value))
                 }
             }
             console.log("speed_controller initialized")
