@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2024.09.17.001
+// @version      2024.10.01.001
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -69,6 +69,7 @@
     // Youtube
     var yt_watch_ran = false;
     function youtube(){
+        
         // if on video (has watch in url) show snack for 2x speed
         if (document.location.href.indexOf("watch") != -1 && yt_watch_ran == false) {
             yt_watch_ran = true;
@@ -78,8 +79,11 @@
                 this.speed_bool = false; // false for 1x, true for 2x
                 this.val_speed = 2
                 this.val_nospeed = 1
+                this.player = document.getElementById("movie_player") || document.getElementsByClassName("html5-video-player")[0]
                 
                 this.toggleSpeed = function(){
+                    // if new speed isn't 1x, have next toggle change back to 1x
+                    this.speed_bool = this.getSpeedModified()
                     // toggle speed bool
                     this.speed_bool = !this.speed_bool;
                     // speed
@@ -96,8 +100,23 @@
                     }
                     // set snackbar
                 }
+
+                this.getSpeedModified = function(){
+                    return this.player.getPlaybackRate() != 1
+                }
+
+                // yt natively has an iframe api for playback rate change. this attaches to that and updates the snackbar text for the current speed
+                this.player.addEventListener('onPlaybackRateChange', function(event) {
+                    // if new speed isn't 1x, have next toggle change back to 1x
+                    this.speed_bool = this.getSpeedModified()
+                    this.snackbar.setText(event + "x speed")
+                    this.snackbar.show()
+                    console.log('Playback rate changed to:', event); // returns the int value of the speed
+                }.bind(this));
+                console.log("Playback listener attached")
+                
                 // this has to be below the toggleSpeed declaration as it won't hoist
-                this.snackbar = new myapi.snackbar(this.val_nospeed + "x speed",0,this.toggleSpeed.bind(this))
+                this.snackbar = new myapi.snackbar(this.player.getPlaybackRate() + "x speed",0,this.toggleSpeed.bind(this))
                 this.snackbar.show()
             
                 // Add an event listener for the fullscreenchange event
@@ -113,12 +132,13 @@
                 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 // The below function is private
                 // with it being let, it's only visible to this object
+                // remember to bind this to it if using this
                 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 let speedSet = function(value){
-                    document.querySelectorAll('video').forEach(x => {
-                        x.playbackRate=parseFloat(value);
-                    })
-                }
+                    this.player.setPlaybackRate(parseFloat(value))
+                    this.snackbar.show();
+                }.bind(this)
+                
             }
             console.log("speed_controller initialized")
         }
