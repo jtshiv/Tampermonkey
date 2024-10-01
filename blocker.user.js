@@ -69,6 +69,7 @@
     // Youtube
     var yt_watch_ran = false;
     function youtube(){
+        
         // if on video (has watch in url) show snack for 2x speed
         if (document.location.href.indexOf("watch") != -1 && yt_watch_ran == false) {
             yt_watch_ran = true;
@@ -78,6 +79,7 @@
                 this.speed_bool = false; // false for 1x, true for 2x
                 this.val_speed = 2
                 this.val_nospeed = 1
+                this.player = document.getElementById("movie_player") || document.getElementsByClassName("html5-video-player")[0]
                 
                 this.toggleSpeed = function(){
                     // toggle speed bool
@@ -97,7 +99,7 @@
                     // set snackbar
                 }
                 // this has to be below the toggleSpeed declaration as it won't hoist
-                this.snackbar = new myapi.snackbar(this.val_nospeed + "x speed",0,this.toggleSpeed.bind(this))
+                this.snackbar = new myapi.snackbar(this.player.getPlaybackRate() + "x speed",0,this.toggleSpeed.bind(this))
                 this.snackbar.show()
             
                 // Add an event listener for the fullscreenchange event
