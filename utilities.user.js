@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Utilities Beta
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2024.09.16.001
+// @version      2024.10.30.001
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -107,40 +107,139 @@
     }
     
 
+    let styleMain = {
+        '.snackbar': {
+            visibility: 'hidden',
+            transition: 'opacity 1s',
+            minWidth: '250px',
+            marginLeft: '-125px',
+            backgroundColor: '#333',
+            color: '#fff',
+            textAlign: 'center',
+            borderRadius: '2px',
+            padding: '16px',
+            position: 'fixed',
+            zIndex: 1,
+            left: '50%',
+            bottom: '90px',
+        },
+        '.snackbar.show': {
+            visibility: 'visible',
+            WebkitAnimation: 'fadein 0.5s',
+            animation: 'fadein 0.5s',
+        },
+        '.snackbar .close': {
+            float: 'right',
+            cursor: 'pointer',
+        },
+        '.snackbar .fn1': {
+            cursor: 'pointer',
+        },
+        '@-webkit-keyframes fadein': {
+            from: {
+                bottom: '0',
+                opacity: 0,
+            },
+            to: {
+                bottom: '30px',
+                opacity: 1,
+            },
+        },
+        '@keyframes fadein': {
+            from: {
+                bottom: '0',
+                opacity: 0,
+            },
+            to: {
+                bottom: '30px',
+                opacity: 1,
+            },
+        },
+        '@-webkit-keyframes fadeout': {
+            from: {
+                bottom: '30px',
+                opacity: 1,
+            },
+            to: {
+                bottom: '0',
+                opacity: 0,
+            },
+        },
+        '@keyframes fadeout': {
+            from: {
+                bottom: '30px',
+                opacity: 1,
+            },
+            to: {
+                bottom: '0',
+                opacity: 0,
+            },
+        },
+    };
+    // convert it to a string for uses below
+    styleMain = objectToCssString(styleMain);
 
-    let styleMain = `
-        .snackbar {
-            visibility: hidden; /* Hidden by default. Visible on click */
-            transition: opacity 1s; min-width: 250px; /* Set a default minimum width */
-            margin-left: -125px; /* Divide value of min-width by 2 */
-            background-color: #333; /* Black background color */
-            color: #fff; /* White text color */
-            text-align: center; /* Centered text */
-            border-radius: 2px; /* Rounded borders */
-            padding: 16px; /* Padding */ position: fixed; /* Sit on top of the screen */
-            z-index: 1; /* Add a z-index if needed */
-            left: 50%; /* Center the snackbar */
-            bottom: 90px; /* 30px from the bottom */
+    /**
+     * Converts a JavaScript object of CSS styles into a valid CSS string.
+     * 
+     * @param {Object} styles - A JavaScript object where keys are CSS selectors and values are objects of CSS properties.
+     * @returns {string} - A string of valid CSS rules derived from the object.
+     */
+    function objectToCssString(styles) {
+        let cssString = '';
+    
+        for (let selector in styles) {
+            cssString += `${selector} {`;
+    
+            for (let property in styles[selector]) {
+                if (typeof styles[selector][property] === 'object') {
+                    // For keyframes and nested objects (like 'from' and 'to')
+                    cssString += `${property} {`;
+                    for (let subProp in styles[selector][property]) {
+                        cssString += `${convertCamelToKebab(subProp)}: ${styles[selector][property][subProp]}; `;
+                    }
+                    cssString += '}';
+                } else {
+                    cssString += `${convertCamelToKebab(property)}: ${styles[selector][property]}; `;
+                }
+            }
+    
+            cssString += '} ';
         }
-        /* Show the snackbar when clicking on a button (class added with JavaScript) */
-        .snackbar.show {
-            visibility: visible; /* Show the snackbar */
-            /* Add animation: Take 0.5 seconds to fade in and out the snackbar. However, delay the fade out process for 2.5 seconds */
-            -webkit-animation: fadein 0.5s; animation: fadein 0.5s;
+    
+        return cssString;
+    }
+    /**
+     * Converts a camelCase string into kebab-case format (CSS naming convention).
+     * This function also handles vendor-prefixed properties specifically for WebKit.
+     *
+     * For example:
+     * - 'backgroundColor' becomes 'background-color'
+     * - 'WebkitAnimation' becomes '-webkit-animation'
+     *
+     * @param {string} str - A camelCase string (e.g., 'backgroundColor').
+     * @returns {string} - A kebab-case string (e.g., 'background-color').
+     *
+     * @remarks
+     * This function specifically checks for strings that start with 'Webkit'.
+     * If the input string starts with 'Webkit', it converts it into a 
+     * vendor-prefixed version by:
+     * - Adding '-webkit-' prefix.
+     * - Removing the 'Webkit' part of the string.
+     * - Converting the rest of the string from camelCase to kebab-case.
+     * 
+     * Considerations:
+     * - Additional vendor prefixes (like 'Moz', 'Ms', 'O') should be handled similarly if needed.
+     * - Ensure that input strings are always in camelCase format; if not, the conversion may not work as intended.
+     * - This function only converts camelCase to kebab-case and does not validate CSS properties; ensure that the input is a valid CSS property name.
+     */
+    function convertCamelToKebab(str) {
+        if (str.startsWith('Webkit')) {
+            return `-webkit-${str.slice(6).replace(/([A-Z])/g, "-$1").toLowerCase()}`;
         }
-        .snackbar .close{
-            float:right;
-            cursor:pointer;
-        }
-        .snackbar .fn1{
-            cursor:pointer;
-        }
-        /* Animations to fade the snackbar in and out */
-        @-webkit-keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;}}
-        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;}}
-        @-webkit-keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;}}
-        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;}}
-        `;
+        return str.replace(/([A-Z])/g, "-$1").toLowerCase();
+    }
+
 
     // load functions into window.
     unsafeWindow.createSnackbar = createSnackbar;
