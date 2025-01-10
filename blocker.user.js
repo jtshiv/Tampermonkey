@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2024.10.01.001
+// @version      2025.01.10.001
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -50,6 +50,8 @@
             stackexchange();
         } else if (d === "www.duolingo.com" ){
             duolingo();
+        } else if (d=== "oldschool.runescape.wiki" ){
+            osrswiki();
         }
         // default will clear the interval if not on supported url
         else {
@@ -57,6 +59,12 @@
         }
     }
     
+    // OSRS Wiki
+    function osrswiki(){
+        // remove advanced data class so that more info is visible by default
+        document.querySelectorAll(".advanced-data").forEach(x=>x.classList.remove("advanced-data"));
+    }
+
     // Duolingo
     function duolingo(){
         // decline notification prompt
