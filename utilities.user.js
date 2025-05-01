@@ -515,7 +515,7 @@
         // have dyslexic off for some domains
         if (elem.id !== 'dyslexicstyle'){return};
         let d = document.domain;
-        if (d === "www.youtube.com" || d === "m.youtube.com" || d === "melvoridle.com" || d === "app.ynab.com"){
+        if (d === "www.youtube.com" || d === "m.youtube.com" || d === "melvoridle.com" || d === "app.ynab.com" || d === "wiki.local"){
             elem.disabled = true;
         } else if (document.location.host === "docs.google.com" ) {
             elem.disabled = true;
