@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         OSRS Wiki: Force Desktop Edit with Section Beta
+// @name         OSRS Wiki Beta
 // @namespace    https://oldschool.runescape.wiki/
-// @version      2025.05.09.003
+// @version      2025.05.09.004
 // @description  Redirect mobile edit hash URLs to full desktop edit, preserving all params and section number.
 // @match        https://oldschool.runescape.wiki/w/*
 // @run-at       document-start
