@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OSRS Wiki
 // @namespace    https://oldschool.runescape.wiki/
-// @version      2025.05.09.004
+// @version      2025.05.09.005
 // @description  Redirect mobile edit hash URLs to full desktop edit, preserving all params and section number.
 // @match        https://oldschool.runescape.wiki/w/*
 // @run-at       document-start
