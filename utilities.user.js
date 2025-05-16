@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Utilities
+// @name         Utilities Beta
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2025.05.01.001
+// @version      2025.05.16.001
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -515,7 +515,7 @@
         // have dyslexic off for some domains
         if (elem.id !== 'dyslexicstyle'){return};
         let d = document.domain;
-        if (d === "www.youtube.com" || d === "m.youtube.com" || d === "melvoridle.com" || d === "app.ynab.com" || d === "wiki.local"){
+        if (d === "www.youtube.com" || d === "m.youtube.com" || d === "melvoridle.com" || d === "app.ynab.com" || d === "wiki.local" || d === "prices.osrs.cloud" || d === "prices.runescape.wiki"){
             elem.disabled = true;
         } else if (document.location.host === "docs.google.com" ) {
             elem.disabled = true;
