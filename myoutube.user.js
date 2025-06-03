@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name          Youtube HD Mobile
+// @name          Youtube HD Mobile Beta
 // @downloadURL   https://raw.githubusercontent.com/jtshiv/Tampermonkey/main/myoutube.user.js
-// @version       2024.01.08.01
+// @version       2025.06.03.001
 // @author        adisib - edit by me
 // @namespace     namespace_adisib
 // @description   Select a youtube resolution and resize the player.
@@ -18,7 +18,7 @@
 
 	// Target Resolution to always set to. If not available, the next best resolution will be used.
 	const changeResolution = true;
-	const targetRes = "hd1440";
+	const targetRes = "hd1080";
 	// Choices for targetRes are currently:
 	//   "highres" >= ( 8K / 4320p / QUHD  )
 	//   "hd2880"   = ( 5K / 2880p /  UHD+ )
@@ -82,7 +82,7 @@
 	// youtube has to be at least 480x270 for the player UI
 	const heights = [4320, 2880, 2160, 1440, 1080, 720, 480, 360, 270, 270];
 
-	let doc = document, win = window;
+	let win = window;
 
 	// ID of the most recently played video
 	let recentVideo = "";
@@ -352,7 +352,7 @@
 
 		if (win.location.href.indexOf("/watch") !== -1)
 		{
-			let pageManager = unwrapElement(doc.getElementsByTagName("ytd-watch-flexy")[0]);
+			let pageManager = unwrapElement(document.getElementsByTagName("ytd-watch-flexy")[0]);
 
 			if (pageManager)
 			{
@@ -360,14 +360,14 @@
 				{
 					const styleContent = "#error-screen { z-index: 42 !important } .ytp-error { display: none !important }";
 
-					let errorStyle = doc.getElementById("ythdErrorWorkaroundStyleSheet");
+					let errorStyle = document.getElementById("ythdErrorWorkaroundStyleSheet");
 					if (!errorStyle)
 					{
-						errorStyle = doc.createElement("style");
+						errorStyle = document.createElement("style");
 						errorStyle.type = "text/css";
 						errorStyle.id = "ythdStyleSheet";
 						errorStyle.innerHTML = styleContent;
-						doc.head.appendChild(errorStyle);
+						document.head.appendChild(errorStyle);
 					}
 					else
 					{
@@ -395,8 +395,8 @@
 		if (!useCustomSize)
 		{
 			// don't include youtube search bar as part of the space the video can try to fit in
-			let heightOffsetEl = doc.getElementById("masthead");
-			let mastheadContainerEl = doc.getElementById("masthead-container");
+			let heightOffsetEl = document.getElementById("masthead");
+			let mastheadContainerEl = document.getElementById("masthead-container");
 			let mastheadHeight = 50, mastheadPadding = 16;
 			if (heightOffsetEl && mastheadContainerEl)
 			{
@@ -431,14 +431,14 @@
 			min-height: " + height + "px !important; max-height: none !important; height: " + height + "px !important } \
 		";
 
-		let ythdStyle = doc.getElementById("ythdStyleSheet");
+		let ythdStyle = document.getElementById("ythdStyleSheet");
 		if (!ythdStyle)
 		{
-			ythdStyle = doc.createElement("style");
+			ythdStyle = document.createElement("style");
 			ythdStyle.type = "text/css";
 			ythdStyle.id = "ythdStyleSheet";
 			ythdStyle.innerHTML = styleContent;
-			doc.head.appendChild(ythdStyle);
+			document.head.appendChild(ythdStyle);
 		}
 		else
 		{
@@ -456,14 +456,14 @@
 
 	function main()
 	{
-		let ytPlayer = doc.getElementById("movie_player") || doc.getElementsByClassName("html5-video-player")[0];
+		let ytPlayer = document.getElementById("movie_player") || document.getElementsByClassName("html5-video-player")[0];
 		let ytPlayerUnwrapped = unwrapElement(ytPlayer);
 
 		if (autoTheater && ytPlayerUnwrapped)
 		{
-			if (allowCookies && doc.cookie.indexOf("wide=1") === -1)
+			if (allowCookies && document.cookie.indexOf("wide=1") === -1)
 			{
-				doc.cookie = "wide=1; domain=.youtube.com";
+				document.cookie = "wide=1; domain=.youtube.com";
 			}
 
 			setTheaterMode(ytPlayerUnwrapped);
@@ -488,7 +488,7 @@
 					return;
 				}
 
-				ytPlayer = doc.getElementById("movie_player") || doc.getElementsByClassName("html5-video-player")[0];
+				ytPlayer = document.getElementById("movie_player") || document.getElementsByClassName("html5-video-player")[0];
 				ytPlayerUnwrapped = unwrapElement(ytPlayer);
 				if (ytPlayerUnwrapped)
 				{
