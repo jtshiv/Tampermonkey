@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Utilities Dev
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2025.06.03.001
+// @version      2025.06.03.002
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -392,84 +392,18 @@
     }
 
     function createSnackbar(message){
-        /*to remove, set snackbar.style.opacity = '0'*/
-        let time = Date.now();
-        var style = document.createElement('style');
-        style.id = "snackbarstyle" + time;
-        style.innerHTML = styleMain;
-        document.head.appendChild(style);
-        var snackbar = document.createElement('div');
-        snackbar.id = "snackbar" + time;
-        snackbar.classList.add('snackbar');
-        snackbar.innerText = message;
-        snackbar.style.zIndex = getMaxZIndex() + 1;
-        /* add null close function that can be overwritten for custom fns to run before close */
-        snackbar.close = function(){null};
-        snackbar.addEventListener('transitionend', function() {
-            snackbar.close();
-            snackbar.remove();
-            style.remove();
-        });
-        document.body.appendChild(snackbar);
-
-        snackbar.classList.add('show');
+        let snackbar = new myapi.snackbar(message);
+        snackbar.show();
         return snackbar;
     };
     function createSnackbarFade(message){
-        /*to remove, set snackbar.style.opacity = '0'*/
-        let time = Date.now();
-        var style = document.createElement('style');
-        style.id = "snackbarstyle" + time;
-        style.innerHTML = styleMain;
-        document.head.appendChild(style);
-        var snackbar = document.createElement('div');
-        snackbar.id = "snackbar" + time;
-        snackbar.classList.add('snackbar');
-        snackbar.innerText = message;
-        snackbar.style.zIndex = getMaxZIndex() + 1;
-        /* add null close function that can be overwritten for custom fns to run before close */
-        snackbar.close = function(){null};
-        snackbar.addEventListener('transitionend', function() {
-            snackbar.close();
-            snackbar.remove();
-            style.remove();
-        });
-        document.body.appendChild(snackbar);
-
-        snackbar.classList.add('show');
-        setTimeout(function(){
-            snackbar.style.opacity = '0';
-        },5000);
+        let snackbar = new myapi.snackbar(message,true);
+        snackbar.show();
+        return snackbar
     };
     function createSnackbarFn1(message,callback){
-        /*to remove, set snackbar.style.opacity = '0'*/
-        let time = Date.now();
-        var style = document.createElement('style');
-        style.id = "snackbarstyle" + time;
-        style.innerHTML = styleMain;
-        document.head.appendChild(style);
-        var snackbar = document.createElement('div');
-        snackbar.id = "snackbar" + time;
-        snackbar.classList.add('snackbar');
-        snackbar.innerHTML=`
-            <span class="fn1">`+message+`</span>
-            <span class="close">&times;</span>
-        `;
-        snackbar.querySelector('.close').addEventListener('click',x=>{
-            snackbar.style.opacity=0;
-        });
-        snackbar.querySelector('.fn1').addEventListener('click',callback);
-        snackbar.style.zIndex = getMaxZIndex() + 1;
-        /* add null close function that can be overwritten for custom fns to run before close */
-        snackbar.close = function(){null};
-        snackbar.addEventListener('transitionend', function() {
-            snackbar.close();
-            snackbar.remove();
-            style.remove();
-        });
-        document.body.appendChild(snackbar);
-
-        snackbar.classList.add('show');
+        let snackbar = new myapi.snackbar(message,false,callback);
+        snackbar.show();
         return snackbar;
     };
 
