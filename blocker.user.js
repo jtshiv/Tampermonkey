@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2025.06.03.001
+// @version      2025.06.03.002
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -124,20 +124,20 @@
 
 
             let position_controller = new function(){
-                this.ytPlayer = document.getElementById("movie_player") || document.getElementsByClassName("html5-video-player")[0];
-                this.video = this.ytPlayer.querySelector('video');
-                
                 
 
                 // setup listener for video pause
-                this.video.onpause = function(){
-                    console.log("Video has been paused");
-                    this.currentTime = this.ytPlayer.getCurrentTime();
-                    // check if new paused position is the new furthest
-                    if (this.ytPlayer.getCurrentTime() > this.furthest ){
-                        this.updateVideoData();
-                    }
-                }.bind(this);
+                this.setupOnPause = function(){
+                    this.video.onpause = function(){
+                        console.log("Video has been paused");
+                        this.currentTime = this.ytPlayer.getCurrentTime();
+                        // check if new paused position is the new furthest
+                        if (this.ytPlayer.getCurrentTime() > this.furthest ){
+                            this.updateVideoData();
+                        }
+                    }.bind(this);
+                }
+
 
 
                 this.getVideoIDFromURL = function(){
@@ -209,11 +209,52 @@
 
                     return data;
                 }
-
+                // // Used only for compatability with webextensions version of greasemonkey
+                // let unwrapElement = function(el){
+                //     if (el && el.wrappedJSObject)
+                //     {
+                //         return el.wrappedJSObject;
+                //     }
+                //     return el;
+                // }.bind(this)
+                window.addEventListener("loadstart", function(e) {
+                    if (!(e.target instanceof window.HTMLMediaElement))
+                    {
+                        return;
+                    }
+    
+                    this.ytPlayer = document.getElementById("movie_player") || document.getElementsByClassName("html5-video-player")[0];
+                    this.video = this.ytPlayer.querySelector('video')
+                    this.setupOnPause()
+                    // ytPlayerUnwrapped = unwrapElement(this.ytPlayer);
+                    // if (ytPlayerUnwrapped)
+                    // {
+                    //     console.log("Loaded new video");
+                    //     if (changeResolution)
+                    //     {
+                    //         setResOnReady(ytPlayerUnwrapped, resolutions);
+                    //         //setResolution(ytPlayerUnwrapped, resolutions);
+                    //     }
+                    //     if (autoTheater)
+                    //     {
+                    //         setTheaterMode(ytPlayerUnwrapped);
+                    //     }
+                    // }
+                }.bind(this), true );
 
                 // if part of the init requires a function, it needs to go in here since you
                 // can't hoist fns with this kind of js object
                 this.init = function(){
+                    this.ytPlayer = document.getElementById("movie_player") || document.getElementsByClassName("html5-video-player")[0];
+                    if (!this.ytPlayer){
+                        setTimeout(this.init,1000)
+                        return
+                    }
+                    this.video = this.ytPlayer.querySelector('video');
+                    if (!this.video){
+                        setTimeout(this.init,1000)
+                        return
+                    }
                     this.id = this.getVideoIDFromURL();
                     this.getVideoData();
                     // set this.furthest to be a property that actually looks at this.data.furthest
@@ -222,6 +263,8 @@
                             return this.data?.pos ?? null;
                         }
                     });
+                    this.video = this.ytPlayer.querySelector('video')
+                    this.setupOnPause()
                 }
                 this.init()
             }
