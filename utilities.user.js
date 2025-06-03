@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Utilities Beta
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2025.06.03.003
+// @version      2025.06.03.004
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -74,7 +74,7 @@
             async getValue(name, defaultVal){
                 return await (GM_getValue)(name, defaultVal)
             },
-            async setValue(name, defaultVal){
+            async setValue(name, value){
                 return await (GM_setValue)(name, value)
             },
             async deleteValue(name){
