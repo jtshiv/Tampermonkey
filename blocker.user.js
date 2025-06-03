@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Blocker
+// @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2024.09.17.001
+// @version      2025.06.03.001
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -121,6 +121,110 @@
                 }
             }
             console.log("speed_controller initialized")
+
+
+            let position_controller = new function(){
+                this.ytPlayer = document.getElementById("movie_player") || document.getElementsByClassName("html5-video-player")[0];
+                this.video = this.ytPlayer.querySelector('video');
+                
+                
+
+                // setup listener for video pause
+                this.video.onpause = function(){
+                    console.log("Video has been paused");
+                    this.currentTime = this.ytPlayer.getCurrentTime();
+                    // check if new paused position is the new furthest
+                    if (this.ytPlayer.getCurrentTime() > this.furthest ){
+                        this.updateVideoData();
+                    }
+                }.bind(this);
+
+
+                this.getVideoIDFromURL = function(){
+                    let idMatch = /(?:v=)([\w\-]+)/;
+                    let id = "ERROR: idMatch failed; youtube changed something";
+                    let matches = idMatch.exec(this.ytPlayer.getVideoUrl());
+                    if (matches)
+                    {
+                        id = matches[1];
+                    }
+
+                    return id;
+                }
+
+                this.generateExpiration = function(){
+                    this.expiration = Date.now() + 7 * 24 * 60 * 60 * 1000;
+                }
+                
+                this.getData = async function(){
+                    let data = await myapi.getValue('ytPos', {});
+                    return data;
+                }
+                this.getVideoData = async function(){
+                    let data = await myapi.getValue('ytPos', {});
+                    this.data = data[this.id] || {};
+                    if (this.data.pos){
+                        console.log(`Received furthest video position: ${this.data.pos}`)
+                        let snackbar = new myapi.snackbar(`Jump to location ${this.data.pos}?`,false,jumpToFurthest.bind(null,this.ytPlayer,this.data.pos));
+                        snackbar.show()
+                    }
+                }
+
+                this.updateVideoData = async function(){
+                    let data = await removeExpired();
+                    this.generateExpiration();
+                    data[this.id] = {
+                        pos: this.ytPlayer.getCurrentTime(),
+                        expiration: new Date(this.expiration).toISOString()
+                      };
+                    
+                    await myapi.setValue('ytPos', data);
+                    console.log(`Updated the position for ${this.id} to be ${data[this.id].pos} expiring on ${data[this.id].expiration}`)
+                }
+
+                // private functions via let
+                let jumpToFurthest = function(ytPlayer,position){
+                    ytPlayer.seekTo(position)
+                }
+                let removeExpired = async function(){
+                    // let data = await myapi.getValue('ytPos', {});
+                    let data = await myapi.getValue('ytPos', {});
+
+                    // Safety check in case something weird got in
+                    if (typeof data !== 'object' || data === null) {
+                    console.warn("ytPos data is messed up. Resetting to empty object.");
+                    data = {};
+                    }
+
+                    let now = Date.now();
+
+                    for (let [videoId, info] of Object.entries(data)) {
+                    let expires = new Date(info.expiration).getTime();
+
+                    if (isNaN(expires) || expires < now) {
+                        console.log(`Removing expired entry: ${videoId}`);
+                        delete data[videoId];
+                    }
+                    }
+
+                    return data;
+                }
+
+
+                // if part of the init requires a function, it needs to go in here since you
+                // can't hoist fns with this kind of js object
+                this.init = function(){
+                    this.id = this.getVideoIDFromURL();
+                    this.getVideoData();
+                    // set this.furthest to be a property that actually looks at this.data.furthest
+                    Object.defineProperty(this, 'furthest', {
+                        get: function() {
+                            return this.data?.pos ?? null;
+                        }
+                    });
+                }
+                this.init()
+            }
         }
 
         // pause overlay
