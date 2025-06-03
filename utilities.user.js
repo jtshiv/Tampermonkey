@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Utilities Beta
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2025.05.16.001
+// @version      2025.06.03.003
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -246,7 +246,9 @@
     unsafeWindow.createSnackbarFade = createSnackbarFade;
     unsafeWindow.createSnackbarFn1 = createSnackbarFn1;
 
-    
+    // queue to manage existing snackbars
+    let snackbarQueue = [];
+
     class snackbar_class{
         constructor(text,fade = false,callback = null) {
             this.#text = text
@@ -259,9 +261,18 @@
         #fade
         #callback
         #style
+        #killTimeout
+
         show(){
             this.#testSnack()
+            // Remove existing instance if it's already in the queue
+            snackbarQueue = snackbarQueue.filter(s => s !== this);
             this.snackbar.classList.add('show');
+            snackbarQueue.unshift(this); // Add to start of queue (bottom-most)
+            this.#updatePositions();
+            if (this.#fade) {
+                this.#killTimeout = setTimeout(() => this.close(), 5000);
+            }
         }
         hide(){
             this.snackbar.classList.remove('show');
@@ -285,9 +296,16 @@
             if(this.snackbar == null){this.#initElems()}
         }
         #killSnack(){
-            this.snackbar.remove();
-            this.snackbar = null;
-            this.#style.remove();
+            if (this.snackbar) {
+                this.snackbar.remove();
+                this.snackbar = null;
+            }
+            if (this.#style) {
+                this.#style.remove();
+            }
+            // Remove from queue and update positions
+            snackbarQueue = snackbarQueue.filter(s => s !== this);
+            this.#updatePositions();
         }
         #initElems(){
             let time = Date.now();
@@ -300,6 +318,7 @@
             this.snackbar = document.createElement('div');
             this.snackbar.id = "snackbar" + time;
             this.snackbar.classList.add('snackbar');
+            this.snackbar.style.transition = 'bottom 0.3s ease, opacity 0.5s ease';
             
             // this.snackbar.innerText = this.#text;
             this.snackbar.innerHTML=`
@@ -307,7 +326,8 @@
                 <span class="close">&times;</span>
             `;
             this.snackbar.querySelector('.close').addEventListener('click',x=>{
-                this.snackbar.style.opacity=0;
+                if (this.#killTimeout) clearTimeout(this.#killTimeout);
+                this.close();
             });
 
             // callback if given
@@ -315,17 +335,21 @@
                 this.snackbar.querySelector('.fn1').addEventListener('click',this.#callback);
             }
 
-            // fade if given
-            if (this.#fade){
-                setTimeout(function(){
-                    this.snackbar.style.opacity = '0';
-                },5000);
-            }
+            // // fade if given
+            // if (this.#fade){
+            //     setTimeout(function(){
+            //         this.snackbar.style.opacity = '0';
+            //     },5000);
+            // }
 
             this.snackbar.style.zIndex = this.#getMaxZIndex() + 1;
 
             // when opacity set and it finishes fading, kill elem
-            this.snackbar.addEventListener('transitionend', this.#killSnack.bind(this));
+            this.snackbar.addEventListener('transitionend', () => {
+                if (this.snackbar.style.opacity === '0') {
+                    this.#killSnack();
+                }
+            });
 
             document.body.appendChild(this.snackbar);
             
@@ -348,6 +372,14 @@
             }
 
         }
+        // update position of snackbars
+        #updatePositions() {
+            snackbarQueue.forEach((snack, index) => {
+                if (snack.snackbar) {
+                    snack.snackbar.style.bottom = `${90 + (index * 70)}px`;
+                }
+            });
+        }
         #styleMain = styleMain;
     }
 
@@ -362,84 +394,18 @@
     }
 
     function createSnackbar(message){
-        /*to remove, set snackbar.style.opacity = '0'*/
-        let time = Date.now();
-        var style = document.createElement('style');
-        style.id = "snackbarstyle" + time;
-        style.innerHTML = styleMain;
-        document.head.appendChild(style);
-        var snackbar = document.createElement('div');
-        snackbar.id = "snackbar" + time;
-        snackbar.classList.add('snackbar');
-        snackbar.innerText = message;
-        snackbar.style.zIndex = getMaxZIndex() + 1;
-        /* add null close function that can be overwritten for custom fns to run before close */
-        snackbar.close = function(){null};
-        snackbar.addEventListener('transitionend', function() {
-            snackbar.close();
-            snackbar.remove();
-            style.remove();
-        });
-        document.body.appendChild(snackbar);
-
-        snackbar.classList.add('show');
+        let snackbar = new myapi.snackbar(message);
+        snackbar.show();
         return snackbar;
     };
     function createSnackbarFade(message){
-        /*to remove, set snackbar.style.opacity = '0'*/
-        let time = Date.now();
-        var style = document.createElement('style');
-        style.id = "snackbarstyle" + time;
-        style.innerHTML = styleMain;
-        document.head.appendChild(style);
-        var snackbar = document.createElement('div');
-        snackbar.id = "snackbar" + time;
-        snackbar.classList.add('snackbar');
-        snackbar.innerText = message;
-        snackbar.style.zIndex = getMaxZIndex() + 1;
-        /* add null close function that can be overwritten for custom fns to run before close */
-        snackbar.close = function(){null};
-        snackbar.addEventListener('transitionend', function() {
-            snackbar.close();
-            snackbar.remove();
-            style.remove();
-        });
-        document.body.appendChild(snackbar);
-
-        snackbar.classList.add('show');
-        setTimeout(function(){
-            snackbar.style.opacity = '0';
-        },5000);
+        let snackbar = new myapi.snackbar(message,true);
+        snackbar.show();
+        return snackbar
     };
     function createSnackbarFn1(message,callback){
-        /*to remove, set snackbar.style.opacity = '0'*/
-        let time = Date.now();
-        var style = document.createElement('style');
-        style.id = "snackbarstyle" + time;
-        style.innerHTML = styleMain;
-        document.head.appendChild(style);
-        var snackbar = document.createElement('div');
-        snackbar.id = "snackbar" + time;
-        snackbar.classList.add('snackbar');
-        snackbar.innerHTML=`
-            <span class="fn1">`+message+`</span>
-            <span class="close">&times;</span>
-        `;
-        snackbar.querySelector('.close').addEventListener('click',x=>{
-            snackbar.style.opacity=0;
-        });
-        snackbar.querySelector('.fn1').addEventListener('click',callback);
-        snackbar.style.zIndex = getMaxZIndex() + 1;
-        /* add null close function that can be overwritten for custom fns to run before close */
-        snackbar.close = function(){null};
-        snackbar.addEventListener('transitionend', function() {
-            snackbar.close();
-            snackbar.remove();
-            style.remove();
-        });
-        document.body.appendChild(snackbar);
-
-        snackbar.classList.add('show');
+        let snackbar = new myapi.snackbar(message,false,callback);
+        snackbar.show();
         return snackbar;
     };
 
