@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Utilities Dev
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2025.06.03.002
+// @version      2025.06.03.003
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -265,6 +265,8 @@
 
         show(){
             this.#testSnack()
+            // Remove existing instance if it's already in the queue
+            snackbarQueue = snackbarQueue.filter(s => s !== this);
             this.snackbar.classList.add('show');
             snackbarQueue.unshift(this); // Add to start of queue (bottom-most)
             this.#updatePositions();
