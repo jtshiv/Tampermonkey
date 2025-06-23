@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2025.06.23.001
+// @version      2025.06.23.002
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -134,7 +134,7 @@
                         // check if new paused position is the new furthest
                         if (this.ytPlayer.getCurrentTime() > this.furthest ){
                             this.updateVideoData();
-                            let snackbar = new myapi.snackbar(`Furthest location: ${this.formatFurthest()}`,true);
+                            let snackbar = new myapi.snackbar(`Furthest location: ${this.formatFurthest(this.ytPlayer.getCurrentTime())}`,true);
                             snackbar.show()
                         }
                     }.bind(this);
@@ -167,7 +167,7 @@
                     this.data = data[this.id] || {};
                     if (this.data.pos){
                         console.log(`Received furthest video position: ${this.data.pos}`)
-                        let snackbar = new myapi.snackbar(`Jump to location ${this.formatFurthest()}?`,false,jumpToFurthest.bind(null,this.ytPlayer,this.data.pos));
+                        let snackbar = new myapi.snackbar(`Jump to location ${this.formatFurthest(this.data.pos)}?`,false,jumpToFurthest.bind(null,this.ytPlayer,this.data.pos));
                         snackbar.show()
                     }
                 }
@@ -184,8 +184,8 @@
                     console.log(`Updated the position for ${this.id} to be ${data[this.id].pos} expiring on ${data[this.id].expiration}`)
                 }
 
-                this.formatFurthest = function() {
-                    const totalSeconds = this.furthest;
+                this.formatFurthest = function(inputSeconds) {
+                    const totalSeconds = inputSeconds;
                     const hours = Math.floor(totalSeconds / 3600);
                     const minutes = Math.floor((totalSeconds % 3600) / 60);
                     const seconds = +(totalSeconds % 60).toFixed(2); // Keep decimal seconds
