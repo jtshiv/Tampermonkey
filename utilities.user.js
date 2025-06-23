@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Utilities Beta
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
-// @version      2025.06.03.004
+// @version      2025.06.23.001
 // @include      *
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=stackoverflow.com
 // @grant        GM_addElement
@@ -15,7 +15,7 @@
 // @run-at       document-start
 // ==/UserScript==
 
-(function() {
+(async function() {
     'use strict';
 
     // Your code here...
@@ -24,8 +24,9 @@
     // object with the utilities scripts in them
     // const myapi = 
     // Define a function to initialize the API object
-    function initialize_myapi() {
-        return {
+    function initialize_myapi(retries = 30, delay = 500) {
+        
+        let object = {
             /**
              * Description
              * @param {object} details js object such as { method: 'GET', url: 'https://blah', onload:function(response){} }
@@ -89,6 +90,20 @@
                 return text;
             }
         };
+
+        return new Promise((resolve, reject) => {
+            function tryInit(attempt) {
+                if (document.body) {
+                    resolve(object);
+                } else if (attempt < retries) {
+                    setTimeout(() => tryInit(attempt + 1), delay);
+                } else {
+                    reject(new Error("document.body not available after retries"));
+                }
+            }
+
+            tryInit(0);
+        });
     };
     
 
@@ -510,7 +525,7 @@
 
 
 
-    const myapi = initialize_myapi();
+    const myapi = await initialize_myapi();
     unsafeWindow.myapi = myapi;
 
 })();

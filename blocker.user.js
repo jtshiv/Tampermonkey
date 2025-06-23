@@ -68,12 +68,12 @@
 
     // Youtube
     var yt_watch_ran = false;
-    function youtube(){
+    async function youtube(){
         // if on video (has watch in url) show snack for 2x speed
         if (document.location.href.indexOf("watch") != -1 && yt_watch_ran == false) {
             yt_watch_ran = true;
             // make sure myapi is loaded
-            getmyapi();
+            await getmyapi();
             let speed_controller = new function () {
                 this.speed_bool = false; // false for 1x, true for 2x
                 this.val_speed = 2
@@ -128,7 +128,7 @@
 
                 // setup listener for video pause
                 this.setupOnPause = function(){
-                    this.video.onpause = function(){
+                    this.video.onpause = async function(){
                         console.log("Video has been paused");
                         this.currentTime = this.ytPlayer.getCurrentTime();
                         // check if new paused position is the new furthest
