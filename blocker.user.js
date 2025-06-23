@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blocker Beta
 // @namespace    https://github.com/jtshiv/Tampermonkey
-// @version      2025.06.03.002
+// @version      2025.06.23.001
 // @description  Custom set of rules to block sites
 // @supportURL	 https://github.com/jtshiv/Tampermonkey/issues/new
 // @author       jtshiv
@@ -134,6 +134,8 @@
                         // check if new paused position is the new furthest
                         if (this.ytPlayer.getCurrentTime() > this.furthest ){
                             this.updateVideoData();
+                            let snackbar = new myapi.snackbar(`Furthest location: ${this.formatFurthest()}`,true);
+                            snackbar.show()
                         }
                     }.bind(this);
                 }
@@ -165,7 +167,7 @@
                     this.data = data[this.id] || {};
                     if (this.data.pos){
                         console.log(`Received furthest video position: ${this.data.pos}`)
-                        let snackbar = new myapi.snackbar(`Jump to location ${this.data.pos}?`,false,jumpToFurthest.bind(null,this.ytPlayer,this.data.pos));
+                        let snackbar = new myapi.snackbar(`Jump to location ${this.formatFurthest()}?`,false,jumpToFurthest.bind(null,this.ytPlayer,this.data.pos));
                         snackbar.show()
                     }
                 }
@@ -181,6 +183,25 @@
                     await myapi.setValue('ytPos', data);
                     console.log(`Updated the position for ${this.id} to be ${data[this.id].pos} expiring on ${data[this.id].expiration}`)
                 }
+
+                this.formatFurthest = function() {
+                    const totalSeconds = this.furthest;
+                    const hours = Math.floor(totalSeconds / 3600);
+                    const minutes = Math.floor((totalSeconds % 3600) / 60);
+                    const seconds = +(totalSeconds % 60).toFixed(2); // Keep decimal seconds
+                
+                    const parts = [];
+                
+                    if (hours > 0) parts.push(`${hours}hr`);
+                    if (minutes > 0) parts.push(`${minutes}min`);
+                    
+                    // Show seconds if there’s any decimal or if nothing else was added
+                    if (seconds > 0 || parts.length === 0 || totalSeconds % 60 !== 0) {
+                        parts.push(`${seconds % 1 === 0 ? seconds.toFixed(0) : seconds}sec`);
+                    }
+                
+                    return parts.join(' ');
+                }                
 
                 // private functions via let
                 let jumpToFurthest = function(ytPlayer,position){
